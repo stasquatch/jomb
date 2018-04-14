@@ -1,18 +1,47 @@
 import React, { Component } from "react";
-import logo from "../css/images/logo.svg";
 import "../css/App.css";
+import Book from "./Book";
+import AddBookForm from "./AddBookForm";
+import base from "../base";
 
 class App extends Component {
+  state = {
+    books: {}
+  };
+
+  componentDidMount() {
+    this.ref = base.syncState("books", {
+      context: this,
+      state: "books"
+    });
+  }
+
+  componentWillUnmount() {
+    base.removeBinding(this.ref);
+  }
+
+  addBook = book => {
+    const books = { ...this.state.books };
+    if (!books[book.googleId]) {
+      books[book.googleId] = book;
+      this.setState({ books });
+    } else {
+      console.log("That book was already added.");
+      return;
+    }
+  };
+
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+        <div className="add-book">
+          <AddBookForm addBook={this.addBook} />
+        </div>
+        <ul className="books">
+          {Object.keys(this.state.books).map(key => (
+            <Book key={key} book={this.state.books[key]} />
+          ))}
+        </ul>
       </div>
     );
   }
