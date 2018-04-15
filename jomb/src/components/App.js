@@ -2,11 +2,14 @@ import React, { Component } from "react";
 import "../css/App.css";
 import Book from "./Book";
 import AddBookForm from "./AddBookForm";
+import BookDetail from "./BookDetail";
 import base from "../base";
+import getBookByISBN from "../service/getBookData";
 
 class App extends Component {
   state = {
-    books: {}
+    books: {},
+    currentBook: {}
   };
 
   componentDidMount() {
@@ -31,17 +34,37 @@ class App extends Component {
     }
   };
 
+  setCurrentBook = book => {
+    const thisBook = getBookByISBN(book.googleId);
+    this.setState({ currentBook: thisBook });
+  };
+
   render() {
     return (
-      <div className="App">
-        <div className="add-book">
-          <AddBookForm addBook={this.addBook} />
-        </div>
-        <ul className="books">
-          {Object.keys(this.state.books).map(key => (
-            <Book key={key} book={this.state.books[key]} />
-          ))}
-        </ul>
+      <div className="grid">
+        <header>
+          <h1>just organize my books</h1>
+        </header>
+        <section className="book-list">
+          <div className="add-book">
+            <AddBookForm addBook={this.addBook} />
+          </div>
+          <ul className="books">
+            {Object.keys(this.state.books).map(key => (
+              <Book
+                key={key}
+                book={this.state.books[key]}
+                setCurrentBook={this.setCurrentBook}
+              />
+            ))}
+          </ul>
+        </section>
+        <section className="book-detail">
+          <BookDetail currentBook={this.state.currentBook} />
+        </section>
+        <footer>
+          <p>footer</p>
+        </footer>
       </div>
     );
   }

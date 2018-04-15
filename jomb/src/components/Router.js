@@ -1,12 +1,14 @@
 import React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import App from "./App";
+import BookDetail from "./BookDetail";
 import NotFound from "./NotFound";
 
 const Router = () => (
   <BrowserRouter>
     <Switch>
       <Route exact path="/" component={App} />
+      <Route path="/:bookId" component={App} />
       <Route component={NotFound} />
     </Switch>
   </BrowserRouter>

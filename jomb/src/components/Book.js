@@ -1,20 +1,31 @@
 import React from "react";
 
 class Book extends React.Component {
+  setBook = event => {
+    event.preventDefault();
+    this.props.setCurrentBook(this.props.book);
+  };
+
   render() {
     const hasData = this.props.book.title !== "";
+
     return (
-      <div className="book">
+      <a
+        href={this.props.book.googleId}
+        onClick={this.setBook}
+        className="book-list-single white-bg grey-border"
+      >
         {hasData ? (
-          <div className="book-detail">
-            <h2>{this.props.book.title}</h2>
-            <h4>{this.props.book.authors}</h4>
-            <img src={this.props.book.thumbnail} />
+          <div>
+            <h3>{this.props.book.title}</h3>
+            <span className="book-list-single-authors">
+              {this.props.book.authors}
+            </span>
           </div>
         ) : (
-          <h2>{this.props.bookDetails}</h2>
+          <h3>{this.props.bookDetails}</h3>
         )}
-      </div>
+      </a>
     );
   }
 }
