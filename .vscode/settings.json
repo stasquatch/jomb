@@ -1,0 +1,9 @@
+{
+    "editor.tabSize": 2,
+    "editor.formatOnSave": true,
+    "emmet.triggerExpansionOnTab": true,
+    "emmet.syntaxProfiles": {
+        "javascript": "jsx"
+    },
+    "explorer.confirmDragAndDrop": false
+}

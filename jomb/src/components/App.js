@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Route } from "react-router-dom";
 import "../css/App.css";
 import Book from "./Book";
 import AddBookForm from "./AddBookForm";
@@ -60,7 +61,11 @@ class App extends Component {
           </ul>
         </section>
         <section className="book-detail">
-          <BookDetail currentBook={this.state.currentBook} />
+          <Route
+            path="/:bookId"
+            render={props => <BookDetail {...props} books={this.state.books} />}
+          />
+          {/* <Route path="/:bookId" component={BookDetail} /> */}
         </section>
         <footer>
           <p>footer</p>
