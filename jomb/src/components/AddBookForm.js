@@ -1,36 +1,25 @@
 import React from "react";
+import { getBookByIsbn } from "../service/getBookData";
 
 class AddBookForm extends React.Component {
   isbnRef = React.createRef();
 
   createBook = event => {
     event.preventDefault();
-    let book = {};
-    book.isbn = this.isbnRef.current.value;
 
-    fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${book.isbn}`)
-      .then(results => {
-        return results.json();
-      })
-      .then(bookData => {
-        if (!bookData.error && bookData.totalItems > 0) {
-          // TODO: handle multiple publishers items[1]
-          book.title = bookData.items[0].volumeInfo.title;
-          book.authors = bookData.items[0].volumeInfo.authors;
-          book.thumbnail =
-            bookData.items[0].volumeInfo.imageLinks.smallThumbnail;
-          book.googleId = bookData.items[0].id;
-        }
+    let book = getBookByIsbn(this.isbnRef.current.value);
 
-        if (book !== null) {
-          this.props.addBook(book);
-        } else {
-          console.log(
-            `Could not retrieve data for new book ISBN[${this.isbnRef}]`
-          );
-          return;
-        }
-      });
+    if (book !== null) {
+      this.props.addBook(book);
+    } else {
+      console.log(
+        `Could not retrieve data for new book ISBN[${
+          this.isbnRef.current.value
+        }]`
+      );
+      return;
+    }
+
     event.currentTarget.reset();
   };
 

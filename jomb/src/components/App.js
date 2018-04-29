@@ -9,8 +9,7 @@ import getBookByISBN from "../service/getBookData";
 
 class App extends Component {
   state = {
-    books: {},
-    currentBook: {}
+    books: {}
   };
 
   componentDidMount() {
@@ -35,11 +34,6 @@ class App extends Component {
     }
   };
 
-  setCurrentBook = book => {
-    const thisBook = getBookByISBN(book.googleId);
-    this.setState({ currentBook: thisBook });
-  };
-
   render() {
     return (
       <div className="grid">
@@ -52,11 +46,7 @@ class App extends Component {
           </div>
           <ul className="books">
             {Object.keys(this.state.books).map(key => (
-              <Book
-                key={key}
-                book={this.state.books[key]}
-                setCurrentBook={this.setCurrentBook}
-              />
+              <Book key={key} book={this.state.books[key]} />
             ))}
           </ul>
         </section>
@@ -65,7 +55,6 @@ class App extends Component {
             path="/:bookId"
             render={props => <BookDetail {...props} books={this.state.books} />}
           />
-          {/* <Route path="/:bookId" component={BookDetail} /> */}
         </section>
         <footer>
           <p>footer</p>
