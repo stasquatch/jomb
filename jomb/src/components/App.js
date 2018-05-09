@@ -1,39 +1,12 @@
 import React, { Component } from "react";
 import { Route } from "react-router-dom";
+
 import "../css/App.css";
-import Book from "./Book";
+import BookList from "./BookList";
 import AddBookForm from "./AddBookForm";
 import BookDetail from "./BookDetail";
-import base from "../base";
-import getBookByISBN from "../service/getBookData";
 
 class App extends Component {
-  state = {
-    books: {}
-  };
-
-  componentDidMount() {
-    this.ref = base.syncState("books", {
-      context: this,
-      state: "books"
-    });
-  }
-
-  componentWillUnmount() {
-    base.removeBinding(this.ref);
-  }
-
-  addBook = book => {
-    const books = { ...this.state.books };
-    if (!books[book.googleId]) {
-      books[book.googleId] = book;
-      this.setState({ books });
-    } else {
-      console.log("That book was already added.");
-      return;
-    }
-  };
-
   render() {
     return (
       <div className="grid">
@@ -42,19 +15,14 @@ class App extends Component {
         </header>
         <section className="book-list">
           <div className="add-book">
-            <AddBookForm addBook={this.addBook} />
+            <AddBookForm />
           </div>
           <ul className="books">
-            {Object.keys(this.state.books).map(key => (
-              <Book key={key} book={this.state.books[key]} />
-            ))}
+            <Route path="/" component={BookList} />
           </ul>
         </section>
         <section className="book-detail">
-          <Route
-            path="/:bookId"
-            render={props => <BookDetail {...props} books={this.state.books} />}
-          />
+          <Route path="/:bookId" component={BookDetail} />
         </section>
         <footer>
           <p>footer</p>

@@ -1,17 +1,26 @@
-import React from "react";
+import React, { Component } from "react";
+import { Provider } from "react-redux";
+import { createStore, applyMiddleware } from "redux";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
-import App from "./App";
-import BookDetail from "./BookDetail";
-import NotFound from "./NotFound";
+import promise from "redux-promise";
+import reducers from "../reducers/index";
 
-const Router = () => (
-  <BrowserRouter>
-    <Switch>
-      <Route exact path="/" component={App} />
-      <Route path="/:bookId" component={App} />
-      <Route component={NotFound} />
-    </Switch>
-  </BrowserRouter>
-);
+import App from "./App";
+
+const createStoreWithMiddleware = applyMiddleware(promise)(createStore);
+
+class Router extends Component {
+  render() {
+    return (
+      <Provider store={createStoreWithMiddleware(reducers)}>
+        <BrowserRouter>
+          <Switch>
+            <Route path="/" component={App} />
+          </Switch>
+        </BrowserRouter>
+      </Provider>
+    );
+  }
+}
 
 export default Router;

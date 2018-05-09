@@ -1,40 +1,31 @@
-import React from "react";
-import getBookByGoogleId from "../service/getBookData";
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { fetchBook } from "../actions";
 
-// class BookDetail extends React.Component {
-//   render() {
-//     const currentBookId = this.props.match.params.bookId;
-//     return (
-//       <div className="book-detail-book">
-//         <div className="book-detail-book-summary">
-//           <img
-//             className="book-detail-thumbnail"
-//             src={this.props.books[currentBookId].thumbnail}
-//           />
-//           {/* <h2>{this.props.currentBook.title}</h2>
-//           <p>{this.props.currentBook.authors}</p>
-//           <p>{this.props.currentBook.description}</p> */}
-//         </div>
-//       </div>
-//     );
-//   }
-// }
+class BookDetail extends Component {
+  componentDidMount() {
+    const { id } = this.props.match.params;
+    this.props.fetchBook(id);
+  }
 
-const BookDetail = ({ books, match }) => (
-  <div className="book-detail-book">
-    <div className="book-detail-book-summary">
-      <h3>{match.params.bookId}</h3>
-      {books[match.params.bookId] !== undefined ? (
-        <div className="detail">
-          <p>{books[match.params.bookId].title}</p>
-          <p>{books[match.params.bookId].authors}</p>
-          <p>{books[match.params.bookId].description}</p>
-        </div>
-      ) : (
-        "Loading"
-      )}
-    </div>
-  </div>
-);
+  render() {
+    if (!this.props.book) {
+      return <div>Loading...</div>;
+    }
 
-export default BookDetail;
+    return (
+      <div>
+        <h2>Book Detail</h2>
+        <h3>{this.props.book.volumeInfo.title}</h3>
+      </div>
+    );
+  }
+}
+
+// TODO: Refactor this so only one book is being passed, fresh
+// out of the database with the latest info on it.
+function mapStateToProps({ books }, ownProps) {
+  return { book: books[ownProps.match.params.bookId] };
+}
+
+export default connect(mapStateToProps, { fetchBook })(BookDetail);
