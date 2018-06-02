@@ -50,4 +50,23 @@ describe("Tags", () => {
         });
     });
   });
+
+  describe("/POST tag", () => {
+    it("it should add a tag successfully", done => {
+      let tag = new Tag({
+        name: "tag"
+      });
+
+      chai
+        .request(server)
+        .post("/tag")
+        .send(tag)
+        .end((err, res) => {
+          res.body.should.not.have.property("errors");
+          res.body.tag.should.have.property("name").eql(tag.name);
+          res.body.tag.should.have.property("addedOn");
+          done();
+        });
+    });
+  });
 });
