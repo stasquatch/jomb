@@ -1,7 +1,7 @@
-import axios from "axios";
+const axios = require("axios");
 // TODO: make get by ISBN?
 
-const getBookByGoogleId = googleId => {
+exports.getBookByGoogleId = googleId => {
   let book = {};
 
   // TODO: CORS error
@@ -19,19 +19,18 @@ const getBookByGoogleId = googleId => {
         book.description = bookData.volumeInfo.description;
         book.pageCount = bookData.volumeInfo.printedPageCount;
       }
-      console.log(book);
     });
 
   return book;
 };
 
-const getBookByIsbn = isbn => {
+exports.getBookByIsbn = isbn => {
   let book = {};
   book.isbn = isbn;
 
-  fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${book.isbn}`)
+  axios(`https://www.googleapis.com/books/v1/volumes?q=isbn:${book.isbn}`)
     .then(results => {
-      return results.json();
+      return results.data;
     })
     .then(bookData => {
       if (!bookData.error && bookData.totalItems > 0) {
@@ -44,12 +43,8 @@ const getBookByIsbn = isbn => {
         book.description = bookData.items[0].description || "";
         book.googleId = bookData.items[0].id;
       }
-
       return book;
     });
 
   return null;
 };
-
-export { getBookByGoogleId };
-export { getBookByIsbn };
