@@ -21,12 +21,12 @@ describe("Books", () => {
     Tag.remove({}, err => {
       if (err) return err;
     });
-    ChangeHistory.remove(
-      ({},
-      err => {
-        if (err) return err;
-      })
-    );
+    ChangeHistory.remove({}, err => {
+      if (err) return err;
+    });
+    Location.remove({}, err => {
+      if (err) return err;
+    });
     done();
   });
 
