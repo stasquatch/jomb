@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Tag = require("../models/tag");
+const Book = require("../models/book");
 
 const getTags = async (req, res) => {
   let tags = await Tag.find({}, (err, tags) => {
@@ -15,4 +16,13 @@ const addTag = async (req, res) => {
   });
 };
 
-module.exports = { getTags, addTag };
+const deleteTag = async (req, res) => {
+  let tag = await Tag.deleteOne({ _id: req.params.id }, err => {
+    if (err) {
+      console.error("Error deleting tag [req.params.id]: ", err);
+      return res.send(err);
+    }
+  });
+};
+
+module.exports = { getTags, addTag, deleteTag };

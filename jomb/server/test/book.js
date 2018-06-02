@@ -39,23 +39,12 @@ describe("Books", () => {
 
   describe("/GET book", () => {
     it("it should get all existing books", done => {
-      let book = new Book({
-        title: "titlaaae",
-        authors: ["author"],
-        isbn: "isbn"
-      });
-
-      book.save();
-
       chai
         .request(server)
         .get("/book")
         .end((err, res) => {
           res.should.have.status(200);
-          res.body.should.have.lengthOf(1);
-          res.body[0].should.have.property("title").eql(book.title);
-          res.body[0].should.have.property("authors").contains(book.authors[0]);
-          res.body[0].should.have.property("isbn").eql(book.isbn);
+          res.body.should.have.lengthOf(0);
           done();
         });
     });

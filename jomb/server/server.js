@@ -36,7 +36,8 @@ app
 app
   .route("/tag")
   .get(tagController.getTags)
-  .post(tagController.addTag);
+  .post(tagController.addTag)
+  .delete(tagController.deleteTag);
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
 
