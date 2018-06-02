@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const Location = new Schema({
+const LocationSchema = new Schema({
   nickname: {
     type: String,
     required: true

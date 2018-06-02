@@ -4,7 +4,8 @@ const mongoose = require("mongoose");
 const morgan = require("morgan");
 const bodyParser = require("body-parser");
 const port = process.env.PORT || 5000;
-const book = require("./controllers/book");
+const bookController = require("./controllers/bookController");
+const tagController = require("./controllers/tagController");
 const config = require("config");
 
 // let options = {
@@ -29,8 +30,13 @@ app.get("/", (req, res) => res.json({ message: "Success!" }));
 
 app
   .route("/book")
-  .get(book.getBooks)
-  .post(book.addBook);
+  .get(bookController.getBooks)
+  .post(bookController.addBook);
+
+app
+  .route("/tag")
+  .get(tagController.getTags)
+  .post(tagController.addTag);
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
 
