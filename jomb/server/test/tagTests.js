@@ -18,21 +18,8 @@ describe("Tags", () => {
     done();
   });
 
-  describe("healthcheck", () => {
-    it("it should pass the healthcheck", done => {
-      chai
-        .request(server)
-        .get("/")
-        .end((err, res) => {
-          res.should.have.status(200);
-          res.body.should.have.property("message").eql("Success!");
-          done();
-        });
-    });
-  });
-
   describe("/GET tag", () => {
-    it("it should get all tags", done => {
+    it("should get all tags", done => {
       chai
         .request(server)
         .get("/tag")
@@ -45,7 +32,7 @@ describe("Tags", () => {
   });
 
   describe("/POST tag", () => {
-    it("it should add a tag successfully", done => {
+    it("should add a tag successfully", done => {
       let tag = new Tag({
         name: "second tag"
       });
@@ -62,7 +49,7 @@ describe("Tags", () => {
         });
     });
 
-    it("it should not add a tag without a name", done => {
+    it("should not add a tag without a name", done => {
       let tag = new Tag();
 
       chai
@@ -80,7 +67,7 @@ describe("Tags", () => {
   });
 
   describe("/DELETE/:id tag", () => {
-    it("it should delete a tag", done => {
+    it("should delete a tag", done => {
       let tag = new Tag({
         name: "tag to delete"
       });
@@ -89,11 +76,10 @@ describe("Tags", () => {
         chai
           .request(server)
           .delete("/tag/" + tag._id)
-          .send(tag)
           .end((err, res) => {
             res.body.should.not.have.property("errors");
+            done();
           });
-        done();
       });
     });
   });

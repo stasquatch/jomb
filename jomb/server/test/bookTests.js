@@ -21,24 +21,17 @@ describe("Books", () => {
     Tag.remove({}, err => {
       if (err) return err;
     });
+    ChangeHistory.remove(
+      ({},
+      err => {
+        if (err) return err;
+      })
+    );
     done();
   });
 
-  describe("healthcheck", () => {
-    it("it should pass the healthcheck", done => {
-      chai
-        .request(server)
-        .get("/")
-        .end((err, res) => {
-          res.should.have.status(200);
-          res.body.should.have.property("message").eql("Success!");
-          done();
-        });
-    });
-  });
-
   describe("/GET book", () => {
-    it("it should get all existing books", done => {
+    it("should get all existing books", done => {
       chai
         .request(server)
         .get("/book")
@@ -51,7 +44,7 @@ describe("Books", () => {
   });
 
   describe("/POST book", () => {
-    it("it should add a new book", done => {
+    it("should add a new book", done => {
       let book = new Book({
         title: "Testing book 1",
         authors: ["Test Author 1"],
@@ -82,7 +75,7 @@ describe("Books", () => {
         });
     });
 
-    it("it should not add a book missing a title", done => {
+    it("should not add a book missing a title", done => {
       let book = new Book({
         author: ["Testing author 2"],
         isbn: "isbn"
@@ -101,7 +94,7 @@ describe("Books", () => {
         });
     });
 
-    it("it should not add a book missing an author", done => {
+    it("should not add a book missing an author", done => {
       let book = new Book({
         title: "Testing title 2",
         isbn: "isbn"
@@ -117,7 +110,7 @@ describe("Books", () => {
         });
     });
 
-    it("it should not add a book missing an isbn", done => {
+    it("should not add a book missing an isbn", done => {
       let book = new Book({
         title: "title",
         authors: ["author"]
@@ -136,7 +129,7 @@ describe("Books", () => {
         });
     });
 
-    it("it should add a tag to a new book", done => {
+    it("should add a tag to a new book", done => {
       let tag = new Tag({
         name: "tag"
       });
@@ -163,34 +156,65 @@ describe("Books", () => {
         });
     });
 
-    it("it should add a change history to a new book", done => {
+    it("should add a change history to a new book", done => {
       let changeHistoryItem = new ChangeHistory({
         description: "testing"
       });
 
-      changeHistoryItem.save();
-
-      let book = new Book({
-        title: "title",
-        authors: ["author"],
-        isbn: "isbn",
-        changeHistory: [changeHistoryItem._id]
-      });
-
-      chai
-        .request(server)
-        .post("/book")
-        .send(book)
-        .end((err, res) => {
-          res.body.should.not.have.property("errors");
-          res.body.book.should.have
-            .property("changeHistory")
-            .contains(changeHistoryItem._id.toString());
-          done();
+      changeHistoryItem.save((err, changeHistoryItem) => {
+        let book = new Book({
+          title: "title",
+          authors: ["author"],
+          isbn: "isbn",
+          changeHistory: [changeHistoryItem._id]
         });
+
+        chai
+          .request(server)
+          .post("/book")
+          .send(book)
+          .end((err, res) => {
+            res.body.should.not.have.property("errors");
+            res.body.book.should.have
+              .property("changeHistory")
+              .contains(changeHistoryItem._id.toString());
+            done();
+          });
+      });
     });
 
-    it("it should add a location to a new book", done => {
+    it("should persist change history item after its book is deleted", done => {
+      let changeHistoryItem = new ChangeHistory({
+        description: "TEST"
+      });
+
+      changeHistoryItem.save((err, item) => {
+        let book = new Book({
+          title: "title",
+          authors: ["author"],
+          isbn: "isbn",
+          changeHistory: [changeHistoryItem._id]
+        });
+
+        book.save((err, book) => {
+          Book.deleteOne({ _id: book._id }, err => {
+            chai
+              .request(server)
+              .get("/changeHistories")
+              .end((err, res) => {
+                res.body.should.not.have.property("errors");
+                res.body.should.have.lengthOf(1);
+                res.body[0].should.have
+                  .property("description")
+                  .eql(changeHistoryItem.description);
+                done();
+              });
+          });
+        });
+      });
+    });
+
+    it("should add a location to a new book", done => {
       let location = new Location({
         nickname: "bookshelf",
         locationType: "living room"
@@ -216,6 +240,26 @@ describe("Books", () => {
             .contains(location._id.toString());
           done();
         });
+    });
+  });
+
+  describe("/DELETE/:id book", () => {
+    it("should delete a book", done => {
+      let book = new Book({
+        title: "title to delete",
+        authors: ["author"],
+        isbn: "isbn"
+      });
+
+      book.save((err, book) => {
+        chai
+          .request(server)
+          .delete("/book/" + book._id)
+          .end((err, res) => {
+            res.body.should.not.have.property("errors");
+            done();
+          });
+      });
     });
   });
 });

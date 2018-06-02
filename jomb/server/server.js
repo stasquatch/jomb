@@ -6,6 +6,7 @@ const bodyParser = require("body-parser");
 const port = process.env.PORT || 5000;
 const bookController = require("./controllers/bookController");
 const tagController = require("./controllers/tagController");
+const changeHistoryController = require("./controllers/changeHistoryController");
 const config = require("config");
 
 // let options = {
@@ -31,13 +32,16 @@ app.get("/", (req, res) => res.json({ message: "Success!" }));
 app
   .route("/book")
   .get(bookController.getBooks)
-  .post(bookController.addBook);
+  .post(bookController.addBook)
+  .delete(bookController.deleteBook);
 
 app
   .route("/tag")
   .get(tagController.getTags)
   .post(tagController.addTag)
   .delete(tagController.deleteTag);
+
+app.route("/changeHistories").get(changeHistoryController.getAllChanges);
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
 
