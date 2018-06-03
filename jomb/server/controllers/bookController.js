@@ -7,7 +7,7 @@ const { getBookByIsbn } = require("../service/GoogleBookServiceCaller");
 
 exports.getBooks = async (req, res) => {
   let books = await Book.find({}, (err, books) => {
-    if (err) return res.json(err);
+    if (err) return res.json({ message: "Error retrieving all books." });
     res.json(books);
   });
 };
@@ -25,43 +25,40 @@ exports.getBook = async (req, res) => {
 
 exports.addBook = async (req, res) => {
   let isbn = req.body.isbn;
-  let googleBookInfo = getBookByIsbn(isbn)
-    .then(data => {
-      if (!data.data || !data.data.items[0]) return res.json(err);
+  let googleBookInfo = getBookByIsbn(isbn).then(data => {
+    if (!data.data || !data.data.items[0]) return res.json(err);
 
-      let bookInfo = data.data.items[0].volumeInfo;
-      let book = new Book(req.body);
+    let bookInfo = data.data.items[0].volumeInfo;
+    let book = new Book(req.body);
 
-      book.title = bookInfo.title || "";
-      book.authors = bookInfo.authors || [];
+    book.title = bookInfo.title || "";
+    book.authors = bookInfo.authors || [];
 
-      book.save((err, book) => {
-        if (err) {
-          if (err.code === 11000) {
-            return res.json({
-              message: "You've already added a book with that ISBN"
-            });
-          } else {
-            return res.json({ message: "There was an error adding your book" });
-          }
+    book.save((err, book) => {
+      if (err) {
+        if (err.code === 11000) {
+          return res.json({
+            message: "You've already added a book with that ISBN"
+          });
+        } else {
+          return res.json({
+            message: "There was an error adding that book."
+          });
         }
-        changeHistoryController.addChangeHistoryToBook(book._id, ADD);
-        res.json({ message: "Book successfully added!", book });
-      });
-    })
-    .catch(err => {
-      console.error(`Error adding book [${isbn}]: ${err}`);
-      res.send(err);
+      }
+      changeHistoryController.addChangeHistoryToBook(book._id, ADD);
+      res.json({ message: "Book successfully added!", book });
     });
+  });
 };
 
 exports.deleteBook = async (req, res) => {
   let book = await Book.deleteOne({ _id: req.params.id }, (err, book) => {
     if (err) {
       console.error(`Error deleting book [${req.params.id}]: ${err}`);
-      return res.json(
-        "There was an error deleting this book. Please try again."
-      );
+      return res.json({
+        message: "There was an error deleting this book. Please try again."
+      });
     }
     changeHistoryController.addChangeHistoryToBook(req.params.id, DELETE);
     res.json({ message: "Book successfully deleted!" });
@@ -76,9 +73,10 @@ exports.updateBook = async (req, res) => {
     (err, book) => {
       if (err) {
         console.error(`Error updating book [${req.params.id}]: ${err}`);
-        return res.json(
-          "Sorry, there was an error updating this book. Please try again."
-        );
+        return res.json({
+          message:
+            "Sorry, there was an error updating this book. Please try again."
+        });
       }
       changeHistoryController.addChangeHistoryToBook(req.params.id, UPDATE);
       res.json({ message: "Book successfully updated!", book });

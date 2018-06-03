@@ -21,7 +21,7 @@ const getAllChanges = async (req, res) => {
   const changes = ChangeHistory.find({}, (err, changes) => {
     if (err) {
       console.error("Error trying to retrieve all histories: ", err);
-      return res.send(err);
+      return res.json({ message: "Error retrieving all change histories" });
     }
     res.json(changes);
   });
