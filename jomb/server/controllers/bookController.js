@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const Book = require("../models/book");
 const ChangeHistory = require("../models/changeHistory");
 const changeHistoryController = require("./changeHistoryController");
-const { ADD, DELETE } = require("../models/constants");
+const { ADD, DELETE, UPDATE } = require("../models/constants");
 const { getBookByIsbn } = require("../service/GoogleBookServiceCaller");
 
 exports.getBooks = async (req, res) => {
@@ -58,12 +58,30 @@ exports.addBook = async (req, res) => {
 exports.deleteBook = async (req, res) => {
   let book = await Book.deleteOne({ _id: req.params.id }, (err, book) => {
     if (err) {
-      console.error("Error deleting book [req.params.id]: ", err);
-      return res.send(err);
+      console.error(`Error deleting book [${req.params.id}]: ${err}`);
+      return res.json(
+        "There was an error deleting this book. Please try again."
+      );
     }
-    changeHistoryController.addChangeHistoryToBook(req.params._id, DELETE);
+    changeHistoryController.addChangeHistoryToBook(req.params.id, DELETE);
     res.json({ message: "Book successfully deleted!" });
   });
 };
 
-// UPDATE BOOK
+exports.updateBook = async (req, res) => {
+  let book = await Book.findOneAndUpdate(
+    { _id: req.params.id },
+    req.body,
+    { new: true },
+    (err, book) => {
+      if (err) {
+        console.error(`Error updating book [${req.params.id}]: ${err}`);
+        return res.json(
+          "Sorry, there was an error updating this book. Please try again."
+        );
+      }
+      changeHistoryController.addChangeHistoryToBook(req.params.id, UPDATE);
+      res.json({ message: "Book successfully updated!", book });
+    }
+  );
+};

@@ -10,6 +10,7 @@ const Book = require("../models/book");
 const Tag = require("../models/tag");
 const ChangeHistory = require("../models/changeHistory");
 const BookLocation = require("../models/location");
+const { ADD } = require("../models/constants");
 
 chai.use(chaiHttp);
 
@@ -30,7 +31,7 @@ describe("Books", () => {
     done();
   });
 
-  describe("/GET books", () => {
+  describe("Get books", () => {
     it("should get all existing books", done => {
       chai
         .request(server)
@@ -43,7 +44,7 @@ describe("Books", () => {
     });
   });
 
-  describe("/GET book", () => {
+  describe("Get book", () => {
     it("should get a single book by id", done => {
       let book = new Book({
         title: "book",
@@ -65,7 +66,7 @@ describe("Books", () => {
     });
   });
 
-  describe("/POST book", () => {
+  describe("Add book", () => {
     it("should add a new book", done => {
       chai
         .request(server)
@@ -157,7 +158,7 @@ describe("Books", () => {
               .end((err, res) => {
                 res.body.should.not.have.property("errors");
                 res.body.should.have.lengthOf(1);
-                res.body[0].should.have.property("description").eql("Add");
+                res.body[0].should.have.property("description").eql(ADD);
                 done();
               });
           });
@@ -191,7 +192,7 @@ describe("Books", () => {
     });
   });
 
-  describe("/DELETE/:id book", () => {
+  describe("Delete book", () => {
     it("should delete a book", done => {
       chai
         .request(server)
@@ -202,7 +203,39 @@ describe("Books", () => {
             .request(server)
             .delete("/book/" + res.body.book._id)
             .end((err, res) => {
-              res.body.should.not.have.property("errors");
+              res.body.should.have
+                .property("message")
+                .eql("Book successfully deleted!");
+              done();
+            });
+        });
+    });
+  });
+
+  describe("Update book", () => {
+    it("should update an existing book", done => {
+      // ADD THE BOOK
+      chai
+        .request(server)
+        .post("/book")
+        .send({ isbn: "9781986431484" })
+        .end((err, res) => {
+          // CHANGE THE BOOK
+          let book = res.body.book;
+          book.title = "Changed title";
+
+          // UPDATE THE BOOK
+          chai
+            .request(server)
+            .post(`/book/${res.body.book._id}`)
+            .send(book)
+            .end((err, res) => {
+              res.body.should.have.property("book");
+              res.body.book.should.have.property("title").eql(book.title);
+              // currently the change history is happening asynchronously to the update,
+              // so the book object returned on the update call is not in sync with the
+              // most up to date version of change history. let's work on this later.
+              // res.body.book.changeHistory.should.have.lengthOf(2);
               done();
             });
         });

@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const ChangeHistory = require("../models/changeHistory");
 const Book = require("../models/book");
 
-exports.addChangeHistoryToBook = async (bookId, changeDescription) => {
+const addChangeHistoryToBook = async (bookId, changeDescription) => {
   const changeHistoryItem = new ChangeHistory({
     description: changeDescription,
     bookId
@@ -17,7 +17,7 @@ exports.addChangeHistoryToBook = async (bookId, changeDescription) => {
   });
 };
 
-exports.getAllChanges = async (req, res) => {
+const getAllChanges = async (req, res) => {
   const changes = ChangeHistory.find({}, (err, changes) => {
     if (err) {
       console.error("Error trying to retrieve all histories: ", err);
@@ -26,3 +26,5 @@ exports.getAllChanges = async (req, res) => {
     res.json(changes);
   });
 };
+
+module.exports = { addChangeHistoryToBook, getAllChanges };

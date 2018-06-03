@@ -32,7 +32,8 @@ app
 app
   .route("/book/:id")
   .get(bookController.getBook)
-  .delete(bookController.deleteBook);
+  .delete(bookController.deleteBook)
+  .post(bookController.updateBook);
 
 app
   .route("/tag")
