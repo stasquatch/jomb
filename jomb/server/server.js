@@ -35,6 +35,8 @@ app
   .delete(bookController.deleteBook)
   .post(bookController.updateBook);
 
+app.route("/book/:id/:rating").post(bookController.rateBook);
+
 app
   .route("/tag")
   .get(tagController.getTags)

@@ -36,7 +36,16 @@ const BookSchema = new Schema({
       type: Schema.Types.ObjectId,
       ref: "Location"
     }
-  ]
+  ],
+  rating: {
+    type: Number,
+    validate: {
+      validator: function(value) {
+        return [1, 2, 3, 4, 5].indexOf(value) !== -1;
+      },
+      message: "Value must be between 1 and 5"
+    }
+  }
 });
 
 module.exports = mongoose.model("Book", BookSchema);

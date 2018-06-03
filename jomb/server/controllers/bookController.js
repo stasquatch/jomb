@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const Book = require("../models/book");
 const ChangeHistory = require("../models/changeHistory");
 const changeHistoryController = require("./changeHistoryController");
-const { ADD, DELETE, UPDATE } = require("../models/constants");
+const { ADD, DELETE, UPDATE, RATE } = require("../models/constants");
 const { getBookByIsbn } = require("../service/GoogleBookServiceCaller");
 
 exports.getBooks = async (req, res) => {
@@ -80,6 +80,25 @@ exports.updateBook = async (req, res) => {
       }
       changeHistoryController.addChangeHistoryToBook(req.params.id, UPDATE);
       res.json({ message: "Book successfully updated!", book });
+    }
+  );
+};
+
+exports.rateBook = async (req, res) => {
+  const bookId = req.params.id;
+  const rating = req.params.rating;
+
+  let book = await Book.findOneAndUpdate(
+    { _id: bookId },
+    { rating },
+    { new: true },
+    (err, book) => {
+      if (err) {
+        console.error(`Error rating book [${bookid}]: ${err}`);
+        return res.json({ message: "Error rating book." });
+      }
+      changeHistoryController.addChangeHistoryToBook(bookId, RATE);
+      res.json({ message: "Book successfully rated!", book });
     }
   );
 };

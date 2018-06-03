@@ -91,7 +91,7 @@ describe("Books", () => {
         .end((err, res) => {
           res.body.should.have
             .property("message")
-            .eql("There was an error adding your book");
+            .eql("There was an error adding that book.");
           done();
         });
     });
@@ -111,7 +111,6 @@ describe("Books", () => {
           .post("/book")
           .send(bookInfo)
           .end((err, res) => {
-            res.body.should.not.have.property("errors");
             res.body.book.should.have
               .property("tags")
               .contains(tag._id.toString());
@@ -214,17 +213,14 @@ describe("Books", () => {
 
   describe("Update book", () => {
     it("should update an existing book", done => {
-      // ADD THE BOOK
       chai
         .request(server)
         .post("/book")
         .send({ isbn: "9781986431484" })
         .end((err, res) => {
-          // CHANGE THE BOOK
           let book = res.body.book;
           book.title = "Changed title";
 
-          // UPDATE THE BOOK
           chai
             .request(server)
             .post(`/book/${res.body.book._id}`)
@@ -236,6 +232,26 @@ describe("Books", () => {
               // so the book object returned on the update call is not in sync with the
               // most up to date version of change history. let's work on this later.
               // res.body.book.changeHistory.should.have.lengthOf(2);
+              done();
+            });
+        });
+    });
+
+    it("should add a rating to a book", done => {
+      chai
+        .request(server)
+        .post("/book")
+        .send({ isbn: "9781986431484" })
+        .end((err, res) => {
+          let book = res.body.book;
+          book.rating = 5;
+
+          chai
+            .request(server)
+            .post(`/book/${res.body.book._id}/${book.rating}`)
+            .end((err, res) => {
+              res.body.should.have.property("book");
+              res.body.book.should.have.property("rating").eql(book.rating);
               done();
             });
         });

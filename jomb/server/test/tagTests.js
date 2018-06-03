@@ -57,10 +57,7 @@ describe("Tags", () => {
         .post("/tag")
         .send(tag)
         .end((err, res) => {
-          res.body.should.have.property("errors");
-          res.body.errors.name.should.have
-            .property("message")
-            .eql("Path `name` is required.");
+          res.body.should.have.property("message").eql("Error adding new tag.");
           done();
         });
     });
