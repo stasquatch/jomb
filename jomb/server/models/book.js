@@ -41,7 +41,9 @@ const BookSchema = new Schema({
     type: Number,
     min: [1, "Rating must be between 1 and 5"],
     max: 5
-  }
+  },
+  format: String,
+  status: String
 });
 
 module.exports = mongoose.model("Book", BookSchema);
