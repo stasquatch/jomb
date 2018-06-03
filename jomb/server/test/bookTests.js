@@ -9,7 +9,7 @@ const should = chai.should();
 const Book = require("../models/book");
 const Tag = require("../models/tag");
 const ChangeHistory = require("../models/changeHistory");
-const Location = require("../models/location");
+const BookLocation = require("../models/location");
 
 chai.use(chaiHttp);
 
@@ -24,13 +24,13 @@ describe("Books", () => {
     ChangeHistory.remove({}, err => {
       if (err) return err;
     });
-    Location.remove({}, err => {
+    BookLocation.remove({}, err => {
       if (err) return err;
     });
     done();
   });
 
-  describe("/GET book", () => {
+  describe("/GET books", () => {
     it("should get all existing books", done => {
       chai
         .request(server)
@@ -43,88 +43,54 @@ describe("Books", () => {
     });
   });
 
+  describe("/GET book", () => {
+    it("should get a single book by id", done => {
+      let book = new Book({
+        title: "book",
+        authors: ["author"],
+        isbn: "123"
+      });
+
+      book.save((err, book) => {
+        chai
+          .request(server)
+          .get(`/book/${book._id}`)
+          .end((err, res) => {
+            res.body.should.have.property("title").eql(book.title);
+            res.body.should.have.property("authors").contains(book.authors[0]);
+            res.body.should.have.property("isbn").eql(book.isbn);
+            done();
+          });
+      });
+    });
+  });
+
   describe("/POST book", () => {
     it("should add a new book", done => {
-      let book = new Book({
-        title: "Testing book 1",
-        authors: ["Test Author 1"],
-        isbn: "isbn"
-      });
       chai
         .request(server)
         .post("/book")
-        .send(book)
+        .send({ isbn: "9781986431484" })
         .end((err, res) => {
-          res.should.have.status(200);
           res.body.should.have
             .property("message")
             .eql("Book successfully added!");
-          res.body.should.have
-            .property("book")
-            .property("title")
-            .eql(book.title);
-          res.body.should.have
-            .property("book")
-            .property("authors")
-            .eql(book.authors);
-          res.body.should.have
-            .property("book")
-            .property("isbn")
-            .eql(book.isbn);
-          done();
-        });
-    });
-
-    it("should not add a book missing a title", done => {
-      let book = new Book({
-        author: ["Testing author 2"],
-        isbn: "isbn"
-      });
-
-      chai
-        .request(server)
-        .post("/book")
-        .send(book)
-        .end((err, res) => {
-          res.body.should.have.property("errors");
-          res.body.errors.title.should.have
-            .property("message")
-            .eql("Path `title` is required.");
-          done();
-        });
-    });
-
-    it("should not add a book missing an author", done => {
-      let book = new Book({
-        title: "Testing title 2",
-        isbn: "isbn"
-      });
-
-      chai
-        .request(server)
-        .post("/book")
-        .send(book)
-        .end((err, res) => {
-          res.body.book.should.have.property("authors").with.lengthOf(0);
+          res.body.should.have.property("book").property("title");
+          res.body.should.have.property("book").property("authors");
+          res.body.should.have.property("book").property("isbn");
           done();
         });
     });
 
     it("should not add a book missing an isbn", done => {
-      let book = new Book({
-        title: "title",
-        authors: ["author"]
-      });
-
       chai
         .request(server)
         .post("/book")
-        .send(book)
+        .send({ isbn: "" })
         .end((err, res) => {
-          res.body.should.have.property("errors");
-          res.body.errors.isbn.should.have
+          res.body.should.have
             .property("message")
-            .eql("Path `isbn` is required.");
+            .eql("There was an error adding your book");
           done();
         });
     });
@@ -134,26 +100,23 @@ describe("Books", () => {
         name: "tag"
       });
 
-      tag.save();
-
-      let book = new Book({
-        title: "title",
-        authors: ["author"],
-        isbn: "isbn",
-        tags: [tag._id]
+      tag.save((err, tag) => {
+        let bookInfo = {
+          isbn: "9781986431484",
+          tags: [tag._id]
+        };
+        chai
+          .request(server)
+          .post("/book")
+          .send(bookInfo)
+          .end((err, res) => {
+            res.body.should.not.have.property("errors");
+            res.body.book.should.have
+              .property("tags")
+              .contains(tag._id.toString());
+            done();
+          });
       });
-
-      chai
-        .request(server)
-        .post("/book")
-        .send(book)
-        .end((err, res) => {
-          res.body.should.not.have.property("errors");
-          res.body.book.should.have
-            .property("tags")
-            .contains(tag._id.toString());
-          done();
-        });
     });
 
     it("should add a change history to a new book", done => {
@@ -162,12 +125,10 @@ describe("Books", () => {
       });
 
       changeHistoryItem.save((err, changeHistoryItem) => {
-        let book = new Book({
-          title: "title",
-          authors: ["author"],
-          isbn: "isbn",
+        let book = {
+          isbn: "9781986431484",
           changeHistory: [changeHistoryItem._id]
-        });
+        };
 
         chai
           .request(server)
@@ -184,82 +145,67 @@ describe("Books", () => {
     });
 
     it("should persist change history item after its book is deleted", done => {
-      let changeHistoryItem = new ChangeHistory({
-        description: "TEST"
-      });
-
-      changeHistoryItem.save((err, item) => {
-        let book = new Book({
-          title: "title",
-          authors: ["author"],
-          isbn: "isbn",
-          changeHistory: [changeHistoryItem._id]
-        });
-
-        book.save((err, book) => {
-          Book.deleteOne({ _id: book._id }, err => {
+      chai
+        .request(server)
+        .post("/book")
+        .send({ isbn: "9781986431484" })
+        .end((err, res) => {
+          Book.deleteOne({ _id: res.body.book._id }, err => {
             chai
               .request(server)
               .get("/changeHistories")
               .end((err, res) => {
                 res.body.should.not.have.property("errors");
                 res.body.should.have.lengthOf(1);
-                res.body[0].should.have
-                  .property("description")
-                  .eql(changeHistoryItem.description);
+                res.body[0].should.have.property("description").eql("Add");
                 done();
               });
           });
         });
-      });
     });
 
     it("should add a location to a new book", done => {
-      let location = new Location({
+      let location = new BookLocation({
         nickname: "bookshelf",
         locationType: "living room"
       });
 
-      location.save();
+      location.save((err, location) => {
+        let book = {
+          isbn: "9781986431484",
+          location: [location._id]
+        };
 
-      let book = new Book({
-        title: "title",
-        authors: ["author"],
-        isbn: "isbn",
-        location: [location._id]
+        chai
+          .request(server)
+          .post("/book")
+          .send(book)
+          .end((err, res) => {
+            res.body.should.not.have.property("errors");
+            res.body.book.should.have
+              .property("location")
+              .contains(location._id.toString());
+            done();
+          });
       });
-
-      chai
-        .request(server)
-        .post("/book")
-        .send(book)
-        .end((err, res) => {
-          res.body.should.not.have.property("errors");
-          res.body.book.should.have
-            .property("location")
-            .contains(location._id.toString());
-          done();
-        });
     });
   });
 
   describe("/DELETE/:id book", () => {
     it("should delete a book", done => {
-      let book = new Book({
-        title: "title to delete",
-        authors: ["author"],
-        isbn: "isbn"
-      });
-
-      book.save((err, book) => {
-        chai
-          .request(server)
-          .delete("/book/" + book._id)
-          .end((err, res) => {
-            res.body.should.not.have.property("errors");
-            done();
-          });
-      });
+      chai
+        .request(server)
+        .post("/book")
+        .send({ isbn: "9781986431484" })
+        .end((err, res) => {
+          chai
+            .request(server)
+            .delete("/book/" + res.body.book._id)
+            .end((err, res) => {
+              res.body.should.not.have.property("errors");
+              done();
+            });
+        });
     });
   });
 });

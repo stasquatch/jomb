@@ -9,11 +9,6 @@ const tagController = require("./controllers/tagController");
 const changeHistoryController = require("./controllers/changeHistoryController");
 const config = require("config");
 
-// let options = {
-//   server: { socketOptions: { keepAlive: 1, connectTimeoutMS: 30000 } },
-//   replset: { socketOptions: { keepAlive: 1, connectTimeoutMS: 30000 } }
-// };
-
 mongoose.connect(config.DBHost);
 let db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error: "));
@@ -32,7 +27,11 @@ app.get("/", (req, res) => res.json({ message: "Success!" }));
 app
   .route("/book")
   .get(bookController.getBooks)
-  .post(bookController.addBook)
+  .post(bookController.addBook);
+
+app
+  .route("/book/:id")
+  .get(bookController.getBook)
   .delete(bookController.deleteBook);
 
 app
