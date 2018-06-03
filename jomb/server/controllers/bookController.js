@@ -5,14 +5,14 @@ const changeHistoryController = require("./changeHistoryController");
 const { ADD, DELETE } = require("../models/constants");
 const { getBookByIsbn } = require("../service/GoogleBookServiceCaller");
 
-const getBooks = async (req, res) => {
+exports.getBooks = async (req, res) => {
   let books = await Book.find({}, (err, books) => {
     if (err) return res.json(err);
     res.json(books);
   });
 };
 
-const getBook = async (req, res) => {
+exports.getBook = async (req, res) => {
   let book = await Book.findOne({ _id: req.params.id }, (err, book) => {
     if (err) {
       return res.json({
@@ -23,7 +23,7 @@ const getBook = async (req, res) => {
   });
 };
 
-const addBook = async (req, res) => {
+exports.addBook = async (req, res) => {
   let isbn = req.body.isbn;
   let googleBookInfo = getBookByIsbn(isbn)
     .then(data => {
@@ -55,7 +55,7 @@ const addBook = async (req, res) => {
     });
 };
 
-const deleteBook = async (req, res) => {
+exports.deleteBook = async (req, res) => {
   let book = await Book.deleteOne({ _id: req.params.id }, (err, book) => {
     if (err) {
       console.error("Error deleting book [req.params.id]: ", err);
@@ -67,5 +67,3 @@ const deleteBook = async (req, res) => {
 };
 
 // UPDATE BOOK
-
-module.exports = { getBooks, addBook, deleteBook, getBook };
