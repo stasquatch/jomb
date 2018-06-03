@@ -55,7 +55,6 @@ exports.addBook = async (req, res) => {
 exports.deleteBook = async (req, res) => {
   let book = await Book.deleteOne({ _id: req.params.id }, (err, book) => {
     if (err) {
-      console.error(`Error deleting book [${req.params.id}]: ${err}`);
       return res.json({
         message: "There was an error deleting this book. Please try again."
       });
@@ -72,7 +71,6 @@ exports.updateBook = async (req, res) => {
     { new: true },
     (err, book) => {
       if (err) {
-        console.error(`Error updating book [${req.params.id}]: ${err}`);
         return res.json({
           message:
             "Sorry, there was an error updating this book. Please try again."
@@ -94,7 +92,6 @@ exports.rateBook = async (req, res) => {
     { new: true, runValidators: true },
     (err, book) => {
       if (err) {
-        console.error(`Error rating book [${bookId}]: ${err}`);
         return res.json({ message: "Error rating book." });
       }
       changeHistoryController.addChangeHistoryToBook(bookId, RATE);

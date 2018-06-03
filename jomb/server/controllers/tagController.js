@@ -19,7 +19,6 @@ exports.addTag = async (req, res) => {
 exports.deleteTag = async (req, res) => {
   let tag = await Tag.deleteOne({ _id: req.params.id }, err => {
     if (err) {
-      console.error("Error deleting tag [req.params.id]: ", err);
       return res.json({ message: "Error deleting that tag." });
     }
   });
