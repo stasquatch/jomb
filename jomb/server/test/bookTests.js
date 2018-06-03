@@ -256,5 +256,26 @@ describe("Books", () => {
             });
         });
     });
+
+    it("should not add an invalid rating to a book", done => {
+      chai
+        .request(server)
+        .post("/book")
+        .send({ isbn: "9781986431484" })
+        .end((err, res) => {
+          let book = res.body.book;
+          book.rating = 15;
+
+          chai
+            .request(server)
+            .post(`/book/${res.body.book._id}/${book.rating}`)
+            .end((err, res) => {
+              res.body.should.have
+                .property("message")
+                .eql("Error rating book.");
+              done();
+            });
+        });
+    });
   });
 });

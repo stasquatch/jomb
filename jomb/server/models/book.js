@@ -39,12 +39,8 @@ const BookSchema = new Schema({
   ],
   rating: {
     type: Number,
-    validate: {
-      validator: function(value) {
-        return [1, 2, 3, 4, 5].indexOf(value) !== -1;
-      },
-      message: "Value must be between 1 and 5"
-    }
+    min: [1, "Rating must be between 1 and 5"],
+    max: 5
   }
 });
 

@@ -81,7 +81,7 @@ exports.updateBook = async (req, res) => {
       changeHistoryController.addChangeHistoryToBook(req.params.id, UPDATE);
       res.json({ message: "Book successfully updated!", book });
     }
-  );
+  ).catch(err => {});
 };
 
 exports.rateBook = async (req, res) => {
@@ -91,14 +91,14 @@ exports.rateBook = async (req, res) => {
   let book = await Book.findOneAndUpdate(
     { _id: bookId },
     { rating },
-    { new: true },
+    { new: true, runValidators: true },
     (err, book) => {
       if (err) {
-        console.error(`Error rating book [${bookid}]: ${err}`);
+        console.error(`Error rating book [${bookId}]: ${err}`);
         return res.json({ message: "Error rating book." });
       }
       changeHistoryController.addChangeHistoryToBook(bookId, RATE);
       res.json({ message: "Book successfully rated!", book });
     }
-  );
+  ).catch(err => {});
 };
