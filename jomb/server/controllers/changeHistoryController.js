@@ -2,9 +2,14 @@ const mongoose = require("mongoose");
 const ChangeHistory = require("../models/changeHistory");
 const Book = require("../models/book");
 
-const addChangeHistoryToBook = async (bookId, changeDescription) => {
+const addChangeHistoryToBook = async (
+  bookId,
+  changeDescription,
+  changeDetail
+) => {
   const changeHistoryItem = new ChangeHistory({
     description: changeDescription,
+    detail: changeDetail,
     bookId
   }).save((err, changeHistoryItem) => {
     let result = Book.findByIdAndUpdate(

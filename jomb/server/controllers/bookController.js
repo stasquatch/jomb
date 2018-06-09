@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const Book = require("../models/book");
 const ChangeHistory = require("../models/changeHistory");
 const changeHistoryController = require("./changeHistoryController");
+const tagController = require("./tagController");
 const { ADD, DELETE, UPDATE, RATE } = require("../models/constants");
 const { getBookByIsbn } = require("../service/GoogleBookServiceCaller");
 
@@ -46,7 +47,11 @@ exports.addBook = async (req, res) => {
           });
         }
       }
-      changeHistoryController.addChangeHistoryToBook(book._id, ADD);
+      changeHistoryController.addChangeHistoryToBook(
+        book._id,
+        ADD,
+        "Added book to library"
+      );
       res.json({ message: "Book successfully added!", book });
     });
   });
@@ -59,17 +64,24 @@ exports.deleteBook = async (req, res) => {
         message: "There was an error deleting this book. Please try again."
       });
     }
-    changeHistoryController.addChangeHistoryToBook(req.params.id, DELETE);
+    changeHistoryController.addChangeHistoryToBook(
+      req.params.id,
+      DELETE,
+      "Deleted book from library"
+    );
     res.json({ message: "Book successfully deleted!" });
   });
 };
 
 exports.updateBook = async (req, res) => {
-  let book = await Book.findOneAndUpdate(
+  const currentBook = await Book.findOne({ _id: req.params.id });
+  const book = await Book.findOneAndUpdate(
     { _id: req.params.id },
     req.body,
     { new: true },
     (err, book) => {
+      // REFACTOR THIS
+
       if (err) {
         return res.json({
           message:
@@ -80,6 +92,15 @@ exports.updateBook = async (req, res) => {
       res.json({ message: "Book successfully updated!", book });
     }
   ).catch(err => {});
+};
+
+exports.addTagToBook = async (req, res) => {
+  // check if tag already exists
+  // create tag if it doesn't exist
+  // add tag to book
+  if (req.body.tag && req.body.tag.name) {
+    const tag = tagController.findOrCreateTag(req.body.tag.name);
+  }
 };
 
 exports.rateBook = async (req, res) => {

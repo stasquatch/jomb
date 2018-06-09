@@ -9,6 +9,22 @@ exports.getTags = async (req, res) => {
   });
 };
 
+exports.findOrCreateTag = async function(name) {
+  return new Promise(async (resolve, reject) => {
+    let tag = await Tag.findOne({ name });
+
+    if (!tag) {
+      tag = await new Tag({ name }).save();
+    }
+
+    if (tag) {
+      resolve(tag);
+    } else {
+      reject("error");
+    }
+  });
+};
+
 exports.addTag = async (req, res) => {
   let tag = await new Tag(req.body).save((err, tag) => {
     if (err) return res.json({ message: "Error adding new tag." });

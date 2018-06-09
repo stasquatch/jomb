@@ -7,6 +7,7 @@ const server = require("../server");
 const should = chai.should();
 
 const Tag = require("../models/tag");
+const tagController = require("../controllers/tagController");
 
 chai.use(chaiHttp);
 
@@ -18,7 +19,7 @@ describe("Tags", () => {
     done();
   });
 
-  describe("/GET tag", () => {
+  describe("Get tag", () => {
     it("should get all tags", done => {
       chai
         .request(server)
@@ -31,7 +32,7 @@ describe("Tags", () => {
     });
   });
 
-  describe("/POST tag", () => {
+  describe("Create tag", () => {
     it("should add a tag successfully", done => {
       let tag = new Tag({
         name: "second tag"
@@ -63,7 +64,7 @@ describe("Tags", () => {
     });
   });
 
-  describe("/DELETE/:id tag", () => {
+  describe("Delete tag", () => {
     it("should delete a tag", done => {
       let tag = new Tag({
         name: "tag to delete"
@@ -78,6 +79,20 @@ describe("Tags", () => {
             done();
           });
       });
+    });
+  });
+
+  describe("Find or create tag", () => {
+    it("should create a new tag if one didn't exist", async done => {
+      const tagName = "new tag name that doesn't exist";
+      tagController
+        .findOrCreateTag(tagName)
+        .then(tag => {
+          newTag.should.have.property("_id");
+          newTag.should.have.property("name").eql(tagName);
+          done();
+        })
+        .catch(err => {});
     });
   });
 });
