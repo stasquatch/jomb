@@ -16,19 +16,12 @@ chai.use(chaiHttp);
 
 describe("Books", () => {
   beforeEach(done => {
-    Book.remove({}, err => {
-      if (err) return err;
-    });
-    Tag.remove({}, err => {
-      if (err) return err;
-    });
-    ChangeHistory.remove({}, err => {
-      if (err) return err;
-    });
-    BookLocation.remove({}, err => {
-      if (err) return err;
-    });
-    done();
+    Promise.all([
+      Book.remove().exec(),
+      Tag.remove().exec(),
+      ChangeHistory.remove().exec(),
+      BookLocation.remove().exec()
+    ]).then(() => done(), done);
   });
 
   describe("Get books", () => {
@@ -39,7 +32,7 @@ describe("Books", () => {
         .end((err, res) => {
           res.should.have.status(200);
           res.body.should.have.lengthOf(0);
-          done();
+          done(err);
         });
     });
   });

@@ -76,23 +76,20 @@ describe("Tags", () => {
           .delete("/tag/" + tag._id)
           .end((err, res) => {
             res.body.should.not.have.property("errors");
-            done();
+            done(err);
           });
       });
     });
   });
 
   describe("Find or create tag", () => {
-    it("should create a new tag if one didn't exist", async done => {
+    it("should create a new tag if one didn't exist", done => {
       const tagName = "new tag name that doesn't exist";
-      tagController
-        .findOrCreateTag(tagName)
-        .then(tag => {
-          newTag.should.have.property("_id");
-          newTag.should.have.property("name").eql(tagName);
-          done();
-        })
-        .catch(err => {});
+      tagController.findOrCreateTag(tagName).then(newTag => {
+        newTag.should.have.property("_id");
+        newTag.should.have.property("name").eql(tagName);
+        done();
+      }, done);
     });
   });
 });

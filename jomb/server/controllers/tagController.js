@@ -9,18 +9,17 @@ exports.getTags = async (req, res) => {
   });
 };
 
-exports.findOrCreateTag = async function(name) {
+exports.findOrCreateTag = name => {
   return new Promise(async (resolve, reject) => {
-    let tag = await Tag.findOne({ name });
+    try {
+      let tag = await Tag.findOne({ name });
 
-    if (!tag) {
-      tag = await new Tag({ name }).save();
-    }
-
-    if (tag) {
+      if (!tag) {
+        tag = await new Tag({ name }).save();
+      }
       resolve(tag);
-    } else {
-      reject("error");
+    } catch (error) {
+      reject(error);
     }
   });
 };

@@ -99,7 +99,7 @@ exports.addTagToBook = async (req, res) => {
   // create tag if it doesn't exist
   // add tag to book
   if (req.body.tag && req.body.tag.name) {
-    const tag = tagController.findOrCreateTag(req.body.tag.name);
+    const tag = await tagController.findOrCreateTag(req.body.tag.name);
   }
 };
 
