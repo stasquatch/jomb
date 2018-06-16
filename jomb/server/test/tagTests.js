@@ -13,9 +13,7 @@ chai.use(chaiHttp);
 
 describe("Tags", () => {
   beforeEach(done => {
-    Tag.remove({}, err => {
-      if (err) return err;
-    });
+    Tag.remove().exec();
     done();
   });
 
@@ -27,7 +25,7 @@ describe("Tags", () => {
         .end((err, res) => {
           res.should.have.status(200);
           res.body.should.have.lengthOf(0);
-          done();
+          done(err);
         });
     });
   });
@@ -59,7 +57,7 @@ describe("Tags", () => {
         .send(tag)
         .end((err, res) => {
           res.body.should.have.property("message").eql("Error adding new tag.");
-          done();
+          done(err);
         });
     });
   });

@@ -53,7 +53,7 @@ describe("Books", () => {
             res.body.should.have.property("title").eql(book.title);
             res.body.should.have.property("authors").contains(book.authors[0]);
             res.body.should.have.property("isbn").eql(book.isbn);
-            done();
+            done(err);
           });
       });
     });
@@ -72,7 +72,7 @@ describe("Books", () => {
           res.body.should.have.property("book").property("title");
           res.body.should.have.property("book").property("authors");
           res.body.should.have.property("book").property("isbn");
-          done();
+          done(err);
         });
     });
 
@@ -85,7 +85,7 @@ describe("Books", () => {
           res.body.should.have
             .property("message")
             .eql("There was an error adding that book.");
-          done();
+          done(err);
         });
     });
 
@@ -107,7 +107,7 @@ describe("Books", () => {
             res.body.book.should.have
               .property("tags")
               .contains(tag._id.toString());
-            done();
+            done(err);
           });
       });
     });
@@ -132,7 +132,7 @@ describe("Books", () => {
             res.body.book.should.have
               .property("changeHistory")
               .contains(changeHistoryItem._id.toString());
-            done();
+            done(err);
           });
       });
     });
@@ -151,7 +151,7 @@ describe("Books", () => {
                 res.body.should.not.have.property("errors");
                 res.body.should.have.lengthOf(1);
                 res.body[0].should.have.property("description").eql(ADD);
-                done();
+                done(err);
               });
           });
         });
@@ -178,7 +178,7 @@ describe("Books", () => {
             res.body.book.should.have
               .property("location")
               .contains(location._id.toString());
-            done();
+            done(err);
           });
       });
     });
@@ -198,7 +198,7 @@ describe("Books", () => {
               res.body.should.have
                 .property("message")
                 .eql("Book successfully deleted!");
-              done();
+              done(err);
             });
         });
     });
@@ -225,7 +225,7 @@ describe("Books", () => {
               // so the book object returned on the update call is not in sync with the
               // most up to date version of change history. let's work on this later.
               // res.body.book.changeHistory.should.have.lengthOf(2);
-              done();
+              done(err);
             });
         });
     });
@@ -245,7 +245,7 @@ describe("Books", () => {
             .end((err, res) => {
               res.body.should.have.property("book");
               res.body.book.should.have.property("rating").eql(book.rating);
-              done();
+              done(err);
             });
         });
     });
@@ -266,7 +266,7 @@ describe("Books", () => {
               res.body.should.have
                 .property("message")
                 .eql("Error rating book.");
-              done();
+              done(err);
             });
         });
     });
