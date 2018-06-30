@@ -112,31 +112,6 @@ describe("Books", () => {
       });
     });
 
-    it("should add a change history to a new book", done => {
-      let changeHistoryItem = new ChangeHistory({
-        description: "testing"
-      });
-
-      changeHistoryItem.save((err, changeHistoryItem) => {
-        let book = {
-          isbn: "9781986431484",
-          changeHistory: [changeHistoryItem._id]
-        };
-
-        chai
-          .request(server)
-          .post("/book")
-          .send(book)
-          .end((err, res) => {
-            res.body.should.not.have.property("errors");
-            res.body.book.should.have
-              .property("changeHistory")
-              .contains(changeHistoryItem._id.toString());
-            done(err);
-          });
-      });
-    });
-
     it("should persist change history item after its book is deleted", done => {
       chai
         .request(server)

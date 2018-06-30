@@ -25,12 +25,6 @@ const BookSchema = new Schema({
       ref: "Tag"
     }
   ],
-  changeHistory: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: "ChangeHistory"
-    }
-  ],
   location: [
     {
       type: Schema.Types.ObjectId,

@@ -45,6 +45,10 @@ app
 
 app.route("/changeHistories").get(changeHistoryController.getAllChanges);
 
+app
+  .route("/changeHistories/:bookId")
+  .get(changeHistoryController.getChangesForBook);
+
 app.listen(port, () => console.log(`Listening on port ${port}`));
 
 module.exports = app;

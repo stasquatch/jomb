@@ -3,7 +3,13 @@ const Book = require("../models/book");
 const ChangeHistory = require("../models/changeHistory");
 const changeHistoryController = require("./changeHistoryController");
 const tagController = require("./tagController");
-const { ADD, DELETE, UPDATE, RATE } = require("../models/constants");
+const {
+  ADD,
+  DELETE,
+  UPDATE,
+  RATE,
+  DUPLICATE_KEY_ERROR
+} = require("../models/constants");
 const { getBookByIsbn } = require("../service/GoogleBookServiceCaller");
 
 exports.getBooks = async (req, res) => {
@@ -26,7 +32,7 @@ exports.getBook = async (req, res) => {
 
 exports.addBook = async (req, res) => {
   let isbn = req.body.isbn;
-  let googleBookInfo = getBookByIsbn(isbn).then(data => {
+  await getBookByIsbn(isbn).then(data => {
     if (!data.data || !data.data.items[0]) return res.json(err);
 
     let bookInfo = data.data.items[0].volumeInfo;
@@ -37,7 +43,7 @@ exports.addBook = async (req, res) => {
 
     book.save((err, book) => {
       if (err) {
-        if (err.code === 11000) {
+        if (err.code === DUPLICATE_KEY_ERROR) {
           return res.json({
             message: "You've already added a book with that ISBN"
           });

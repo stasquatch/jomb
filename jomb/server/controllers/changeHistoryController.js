@@ -16,7 +16,11 @@ const addChangeHistoryToBook = async (
       bookId,
       { $push: { changeHistory: changeHistoryItem } },
       (err, book) => {
-        if (err) console.error("Error saving history: ", err);
+        if (err) {
+          console.error("Error saving history: ", err);
+          return err;
+        }
+        return book;
       }
     );
   });
@@ -31,4 +35,20 @@ const getAllChanges = async (req, res) => {
   });
 };
 
-module.exports = { addChangeHistoryToBook, getAllChanges };
+const getChangesForBook = async (req, res) => {
+  const changes = await ChangeHistory.find(
+    { bookId: req.params.bookId },
+    (err, changes) => {
+      if (err) {
+        return res.json({
+          message: `Error retrieving all change histories for ${
+            req.params.bookId
+          }`
+        });
+      }
+      res.json(changes);
+    }
+  );
+};
+
+module.exports = { addChangeHistoryToBook, getAllChanges, getChangesForBook };
