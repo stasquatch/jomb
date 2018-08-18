@@ -23,30 +23,33 @@ app.use(bodyParser.text());
 app.use(bodyParser.json({ type: "application/json" }));
 
 app.get("/", (req, res) => res.json({ message: "Success!" }));
+app.get("/api/healthcheck", (req, res) =>
+  res.json({ message: "Success! You've hit the backend!" })
+);
 
 app
-  .route("/book")
+  .route("/api/book")
   .get(bookController.getBooks)
   .post(bookController.addBook);
 
 app
-  .route("/book/:id")
+  .route("/api/book/:id")
   .get(bookController.getBook)
   .delete(bookController.deleteBook)
   .post(bookController.updateBook);
 
-app.route("/book/:id/:rating").post(bookController.rateBook);
+app.route("/api/book/:id/:rating").post(bookController.rateBook);
 
 app
-  .route("/tag")
+  .route("/api/tag")
   .get(tagController.getTags)
   .post(tagController.addTag)
   .delete(tagController.deleteTag);
 
-app.route("/changeHistories").get(changeHistoryController.getAllChanges);
+app.route("/api/changeHistories").get(changeHistoryController.getAllChanges);
 
 app
-  .route("/changeHistories/:bookId")
+  .route("/api/changeHistories/:bookId")
   .get(changeHistoryController.getChangesForBook);
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
