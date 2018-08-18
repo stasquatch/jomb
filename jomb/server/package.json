@@ -2,9 +2,9 @@
   "name": "just-organize-my-books",
   "version": "1.0.0",
   "scripts": {
-    "client": "cd ../client && yarn start",
+    "client": "cd ../client && npm run start",
     "server": "SET NODE_ENV=test&& nodemon server.js",
-    "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
+    "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
     "test": "mocha --timeout 10000",
     "start": "SET NODE_ENV=dev&& node server.js"
   },
