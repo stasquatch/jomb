@@ -8,9 +8,12 @@ const {
   DELETE,
   UPDATE,
   RATE,
-  DUPLICATE_KEY_ERROR
+  DUPLICATE_KEY_ERROR,
+  NO_DATA,
+  GENERAL_ERROR,
+  SUCCESS
 } = require("../models/constants");
-const { getBookByIsbn } = require("../service/GoogleBookServiceCaller");
+const axios = require("axios");
 
 exports.getBooks = async (req, res) => {
   let books = await Book.find({}, (err, books) => {
@@ -32,10 +35,14 @@ exports.getBook = async (req, res) => {
 
 exports.addBook = async (req, res) => {
   let isbn = req.body.isbn;
-  await getBookByIsbn(isbn)
+  axios(`https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`)
     .then(data => {
-      if (!data.data || !data.data.items[0] || data.data.totalItems == 0)
-        return res.json(err);
+      if (data.data.totalItems === 0) {
+        return res.json({
+          errorNumber: NO_DATA,
+          message: "We can't find that book, try another IBSN"
+        });
+      }
 
       let bookInfo = data.data.items[0].volumeInfo;
       let book = new Book(req.body);
@@ -47,10 +54,12 @@ exports.addBook = async (req, res) => {
         if (err) {
           if (err.code === DUPLICATE_KEY_ERROR) {
             return res.json({
+              errorNumber: DUPLICATE_KEY_ERROR,
               message: "You've already added a book with that ISBN"
             });
           } else {
             return res.json({
+              errorNumber: GENERAL_ERROR,
               message: "There was an error adding that book."
             });
           }
@@ -60,7 +69,11 @@ exports.addBook = async (req, res) => {
           ADD,
           "Added book to library"
         );
-        res.json({ message: "Book successfully added!", book });
+        res.json({
+          errorNumber: SUCCESS,
+          message: "Book successfully added!",
+          book
+        });
       });
     })
     .catch(err => {

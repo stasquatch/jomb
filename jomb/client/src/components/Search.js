@@ -1,20 +1,37 @@
-import React from "react";
+import React, { Component } from "react";
 
-function Search({ addBook }) {
-  function handleClick(e) {
-    e.preventDefault();
+class Search extends Component {
+  state = {
+    searchField: "asdf"
+  };
+
+  handleClick(event) {
+    event.preventDefault();
     var searchValue = document.getElementById("SearchInput").value;
-    addBook(searchValue);
+    this.props.addBook(searchValue);
+    this.setState({ searchField: "" });
   }
 
-  return (
-    <form className="search-bar" onSubmit={handleClick}>
-      <input type="text" placeholder="Add Book by ISBN" id="SearchInput" />
-      <button type="button" onClick={handleClick}>
-        Add
-      </button>
-    </form>
-  );
+  handleChange = event => {
+    this.setState({ searchField: event.currentTarget.value });
+  };
+
+  render() {
+    return (
+      <form className="search-bar" onSubmit={e => this.handleClick(e)}>
+        <input
+          type="text"
+          placeholder="Add Book by ISBN"
+          id="SearchInput"
+          value={this.state.searchField}
+          onChange={this.handleChange}
+        />
+        <button type="button" onClick={e => this.handleClick(e)}>
+          Add
+        </button>
+      </form>
+    );
+  }
 }
 
 export default Search;
