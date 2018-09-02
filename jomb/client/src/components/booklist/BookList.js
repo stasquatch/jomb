@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import axios from "axios";
-import Search from "./Search";
-import { SUCCESS } from "../helpers/constants";
+import Search from "../search/Search";
+import { SUCCESS } from "../../helpers/constants";
 
 class BookList extends Component {
   state = {

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import BookList from "./BookList";
-import "../styles/site.css";
+import BookList from "../booklist/BookList";
+import "../../shared/_layout.css";
 
 class App extends Component {
   render() {
