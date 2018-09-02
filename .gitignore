@@ -26,3 +26,5 @@ yarn-error.log*
 base.js
 /jomb/variables.env
 /jomb/server/config
+
+/jomb/client/src/**/*.css
