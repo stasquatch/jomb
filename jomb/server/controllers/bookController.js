@@ -32,35 +32,40 @@ exports.getBook = async (req, res) => {
 
 exports.addBook = async (req, res) => {
   let isbn = req.body.isbn;
-  await getBookByIsbn(isbn).then(data => {
-    if (!data.data || !data.data.items[0]) return res.json(err);
+  await getBookByIsbn(isbn)
+    .then(data => {
+      if (!data.data || !data.data.items[0] || data.data.totalItems == 0)
+        return res.json(err);
 
-    let bookInfo = data.data.items[0].volumeInfo;
-    let book = new Book(req.body);
+      let bookInfo = data.data.items[0].volumeInfo;
+      let book = new Book(req.body);
 
-    book.title = bookInfo.title || "";
-    book.authors = bookInfo.authors || [];
+      book.title = bookInfo.title || "";
+      book.authors = bookInfo.authors || [];
 
-    book.save((err, book) => {
-      if (err) {
-        if (err.code === DUPLICATE_KEY_ERROR) {
-          return res.json({
-            message: "You've already added a book with that ISBN"
-          });
-        } else {
-          return res.json({
-            message: "There was an error adding that book."
-          });
+      book.save((err, book) => {
+        if (err) {
+          if (err.code === DUPLICATE_KEY_ERROR) {
+            return res.json({
+              message: "You've already added a book with that ISBN"
+            });
+          } else {
+            return res.json({
+              message: "There was an error adding that book."
+            });
+          }
         }
-      }
-      changeHistoryController.addChangeHistoryToBook(
-        book._id,
-        ADD,
-        "Added book to library"
-      );
-      res.json({ message: "Book successfully added!", book });
+        changeHistoryController.addChangeHistoryToBook(
+          book._id,
+          ADD,
+          "Added book to library"
+        );
+        res.json({ message: "Book successfully added!", book });
+      });
+    })
+    .catch(err => {
+      return err;
     });
-  });
 };
 
 exports.deleteBook = async (req, res) => {
