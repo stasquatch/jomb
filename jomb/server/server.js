@@ -22,10 +22,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.text());
 app.use(bodyParser.json({ type: "application/json" }));
 
-app.get("/", (req, res) => res.json({ message: "Success!" }));
-app.get("/api/healthcheck", (req, res) =>
-  res.json({ message: "Success! You've hit the backend!" })
-);
+app.get("/api/healthcheck", (req, res) => res.json({ message: "Success!" }));
 
 app
   .route("/api/book")

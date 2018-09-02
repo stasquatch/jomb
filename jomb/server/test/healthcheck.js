@@ -12,7 +12,7 @@ describe("Healthcheck", () => {
   it("should pass the healthcheck", done => {
     chai
       .request(server)
-      .get("/")
+      .get("/api/healthcheck")
       .end((err, res) => {
         res.should.have.status(200);
         res.body.should.have.property("message").eql("Success!");

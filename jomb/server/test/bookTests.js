@@ -28,7 +28,7 @@ describe("Books", () => {
     it("should get all existing books", done => {
       chai
         .request(server)
-        .get("/book")
+        .get("/api/book")
         .end((err, res) => {
           res.should.have.status(200);
           res.body.should.have.lengthOf(0);
@@ -48,7 +48,7 @@ describe("Books", () => {
       book.save((err, book) => {
         chai
           .request(server)
-          .get(`/book/${book._id}`)
+          .get(`/api/book/${book._id}`)
           .end((err, res) => {
             res.body.should.have.property("title").eql(book.title);
             res.body.should.have.property("authors").contains(book.authors[0]);
@@ -63,7 +63,7 @@ describe("Books", () => {
     it("should add a new book", done => {
       chai
         .request(server)
-        .post("/book")
+        .post("/api/book")
         .send({ isbn: "9781986431484" })
         .end((err, res) => {
           res.body.should.have
@@ -79,7 +79,7 @@ describe("Books", () => {
     it("should not add a book missing an isbn", done => {
       chai
         .request(server)
-        .post("/book")
+        .post("/api/book")
         .send({ isbn: "" })
         .end((err, res) => {
           res.body.should.have
@@ -101,7 +101,7 @@ describe("Books", () => {
         };
         chai
           .request(server)
-          .post("/book")
+          .post("/api/book")
           .send(bookInfo)
           .end((err, res) => {
             res.body.book.should.have
@@ -115,13 +115,13 @@ describe("Books", () => {
     it("should persist change history item after its book is deleted", done => {
       chai
         .request(server)
-        .post("/book")
+        .post("/api/book")
         .send({ isbn: "9781986431484" })
         .end((err, res) => {
           Book.deleteOne({ _id: res.body.book._id }, err => {
             chai
               .request(server)
-              .get("/changeHistories")
+              .get("/api/changeHistories")
               .end((err, res) => {
                 res.body.should.not.have.property("errors");
                 res.body.should.have.lengthOf(1);
@@ -146,7 +146,7 @@ describe("Books", () => {
 
         chai
           .request(server)
-          .post("/book")
+          .post("/api/book")
           .send(book)
           .end((err, res) => {
             res.body.should.not.have.property("errors");
@@ -163,12 +163,12 @@ describe("Books", () => {
     it("should delete a book", done => {
       chai
         .request(server)
-        .post("/book")
+        .post("/api/book")
         .send({ isbn: "9781986431484" })
         .end((err, res) => {
           chai
             .request(server)
-            .delete("/book/" + res.body.book._id)
+            .delete("/api/book/" + res.body.book._id)
             .end((err, res) => {
               res.body.should.have
                 .property("message")
@@ -183,7 +183,7 @@ describe("Books", () => {
     it("should update an existing book", done => {
       chai
         .request(server)
-        .post("/book")
+        .post("/api/book")
         .send({ isbn: "9781986431484" })
         .end((err, res) => {
           let book = res.body.book;
@@ -191,7 +191,7 @@ describe("Books", () => {
 
           chai
             .request(server)
-            .post(`/book/${res.body.book._id}`)
+            .post(`/api/book/${res.body.book._id}`)
             .send(book)
             .end((err, res) => {
               res.body.should.have.property("book");
@@ -208,7 +208,7 @@ describe("Books", () => {
     it("should add a rating to a book", done => {
       chai
         .request(server)
-        .post("/book")
+        .post("/api/book")
         .send({ isbn: "9781986431484" })
         .end((err, res) => {
           let book = res.body.book;
@@ -216,7 +216,7 @@ describe("Books", () => {
 
           chai
             .request(server)
-            .post(`/book/${res.body.book._id}/${book.rating}`)
+            .post(`/api/book/${res.body.book._id}/${book.rating}`)
             .end((err, res) => {
               res.body.should.have.property("book");
               res.body.book.should.have.property("rating").eql(book.rating);
@@ -228,7 +228,7 @@ describe("Books", () => {
     it("should not add an invalid rating to a book", done => {
       chai
         .request(server)
-        .post("/book")
+        .post("/api/book")
         .send({ isbn: "9781986431484" })
         .end((err, res) => {
           let book = res.body.book;
@@ -236,7 +236,7 @@ describe("Books", () => {
 
           chai
             .request(server)
-            .post(`/book/${res.body.book._id}/${book.rating}`)
+            .post(`/api/book/${res.body.book._id}/${book.rating}`)
             .end((err, res) => {
               res.body.should.have
                 .property("message")

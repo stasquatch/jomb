@@ -22,12 +22,12 @@ describe("Change History", () => {
   it("should add change history item when adding a book", done => {
     chai
       .request(server)
-      .post("/book")
+      .post("/api/book")
       .send({ isbn: "9781986431484" })
       .end((err, res) => {
         chai
           .request(server)
-          .get(`/changeHistories/${res.body.book._id}`)
+          .get(`/api/changeHistories/${res.body.book._id}`)
           .end((err, res) => {
             res.body.should.have.lengthOf(1);
             res.body[0].should.have.property("description").eql("Add");
@@ -39,7 +39,7 @@ describe("Change History", () => {
   it("should add change history item when updating a book", done => {
     chai
       .request(server)
-      .post("/book")
+      .post("/api/book")
       .send({ isbn: "9781986431484" })
       .end((err, res) => {
         // update book
@@ -47,13 +47,13 @@ describe("Change History", () => {
         book.title = "Changed title";
         chai
           .request(server)
-          .post(`/book/${res.body.book._id}`)
+          .post(`/api/book/${res.body.book._id}`)
           .send(book)
           .end((err, res) => {
             // get change histories
             chai
               .request(server)
-              .get(`/changeHistories/${res.body.book._id}`)
+              .get(`/api/changeHistories/${res.body.book._id}`)
               .end((err, res) => {
                 res.body.should.have.lengthOf(2);
                 res.body[0].should.have.property("description").eql("Add");
@@ -67,17 +67,17 @@ describe("Change History", () => {
   it("should add change history item when deleting a book", done => {
     chai
       .request(server)
-      .post("/book")
+      .post("/api/book")
       .send({ isbn: "9781986431484" })
       .end((err, res) => {
         let bookId = res.body.book._id;
         chai
           .request(server)
-          .delete(`/book/${bookId}`)
+          .delete(`/api/book/${bookId}`)
           .end((err, res) => {
             chai
               .request(server)
-              .get(`/changeHistories/${bookId}`)
+              .get(`/api/changeHistories/${bookId}`)
               .end((err, res) => {
                 res.body.should.have.lengthOf(2);
                 res.body[0].should.have.property("description").eql("Add");

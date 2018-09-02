@@ -21,7 +21,7 @@ describe("Tags", () => {
     it("should get all tags", done => {
       chai
         .request(server)
-        .get("/tag")
+        .get("/api/tag")
         .end((err, res) => {
           res.should.have.status(200);
           res.body.should.have.lengthOf(0);
@@ -38,7 +38,7 @@ describe("Tags", () => {
 
       chai
         .request(server)
-        .post("/tag")
+        .post("/api/tag")
         .send(tag)
         .end((err, res) => {
           res.body.should.not.have.property("errors");
@@ -53,7 +53,7 @@ describe("Tags", () => {
 
       chai
         .request(server)
-        .post("/tag")
+        .post("/api/tag")
         .send(tag)
         .end((err, res) => {
           res.body.should.have.property("message").eql("Error adding new tag.");
@@ -71,7 +71,7 @@ describe("Tags", () => {
       tag.save((err, tag) => {
         chai
           .request(server)
-          .delete("/tag/" + tag._id)
+          .delete("/api/tag/" + tag._id)
           .end((err, res) => {
             res.body.should.not.have.property("errors");
             done(err);
