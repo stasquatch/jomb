@@ -6,7 +6,6 @@
 }
 
 body {
-  border: 1pt solid black;
   display: flex;
   flex-direction: column;
   font-family: "Lato", Arial, sans-serif;
@@ -31,7 +30,7 @@ p {
 #SiteTitle h1 {
   color: var(--main-gray);
   font-family: "PT Serif", serif;
-  font-size: 24px;
+  font-size: 28px;
   display: inline-block;
   margin: 0;
   padding: 0;
@@ -39,7 +38,7 @@ p {
 
 header {
   align-items: center;
-  border-bottom: 1px solid var(--main-gray);
+  border-bottom: 3px solid var(--hover-gray);
   display: flex;
   flex-wrap: wrap;
   padding: 0 0 17px 0;
@@ -50,22 +49,34 @@ header {
   margin-left: 30px;
 }
 
-header a,
-header a:visited {
+a,
+a:visited,
+button {
+  background-color: white;
   border: 1pt solid var(--main-gray);
   color: var(--main-gray);
   display: inline-block;
-  padding: 5px 15px;
+  padding: 3px 17px;
   text-decoration: none;
+  text-transform: lowercase;
 }
 
-header a:hover,
-header a:active,
-header a:focus {
+a:hover,
+a:active,
+a:focus,
+button:hover,
+button:focus {
   background-color: var(--hover-gray);
 }
 
-header a:focus {
+input {
+  border: 1pt solid var(--main-gray);
+  border-right: none;
+  color: var(--main-gray);
+  padding: 3px;
+}
+
+a:focus {
   border-color: blue;
 }
 
@@ -78,21 +89,18 @@ header a:focus {
   flex-grow: 1;
 }
 
-#Jomb {
-  border: 1pt solid red;
-}
-
 #Main {
-  display: flex;
   align-items: flex-start;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
 }
 
 #SideBar {
   flex: 1;
-  border: 1pt solid green;
+  min-width: 300px;
 }
 
 #BookDetail {
-  flex: 5;
-  border: 1pt solid purple;
+  flex: 4;
 }

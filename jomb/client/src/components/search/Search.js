@@ -1,8 +1,9 @@
 import React, { Component } from "react";
+import "./Search.css";
 
 class Search extends Component {
   state = {
-    searchField: "asdf"
+    searchField: ""
   };
 
   handleClick(event) {
@@ -27,7 +28,7 @@ class Search extends Component {
           onChange={this.handleChange}
         />
         <button type="button" onClick={e => this.handleClick(e)}>
-          Add
+          Search
         </button>
       </form>
     );
