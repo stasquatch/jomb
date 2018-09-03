@@ -1,0 +1,98 @@
+@import url("https://fonts.googleapis.com/css?family=Lato:400,400i,700,700i|PT+Serif:400,400i,700,700i");
+
+:root {
+  --main-gray: #707070;
+  --hover-gray: #e3e3e3;
+}
+
+body {
+  border: 1pt solid black;
+  display: flex;
+  flex-direction: column;
+  font-family: "Lato", Arial, sans-serif;
+  font-size: 18px;
+  justify-content: space-around;
+  line-height: 150%;
+  margin: 0;
+  padding: 4%;
+}
+
+p {
+  margin: 0;
+  padding: 0;
+}
+
+#SiteTitle,
+#SiteNav,
+#HeaderRight {
+  margin-top: 10px;
+}
+
+#SiteTitle h1 {
+  color: var(--main-gray);
+  font-family: "PT Serif", serif;
+  font-size: 24px;
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  align-items: center;
+  border-bottom: 1px solid var(--main-gray);
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0 0 17px 0;
+  margin-bottom: 17px;
+}
+
+#SiteNav a {
+  margin-left: 30px;
+}
+
+header a,
+header a:visited {
+  border: 1pt solid var(--main-gray);
+  color: var(--main-gray);
+  display: inline-block;
+  padding: 5px 15px;
+  text-decoration: none;
+}
+
+header a:hover,
+header a:active,
+header a:focus {
+  background-color: var(--hover-gray);
+}
+
+header a:focus {
+  border-color: blue;
+}
+
+#SiteNav {
+  flex-grow: 5;
+}
+
+#HeaderRight {
+  text-align: right;
+  flex-grow: 1;
+}
+
+#Jomb {
+  border: 1pt solid red;
+}
+
+#Main {
+  display: flex;
+  align-items: flex-start;
+}
+
+#SideBar {
+  flex: 1;
+  border: 1pt solid green;
+}
+
+#BookDetail {
+  flex: 5;
+  border: 1pt solid purple;
+}
