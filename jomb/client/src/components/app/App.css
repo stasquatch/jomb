@@ -6,8 +6,6 @@
 }
 
 body {
-  display: flex;
-  flex-direction: column;
   font-family: "Lato", Arial, sans-serif;
   font-size: 18px;
   justify-content: space-around;
@@ -19,6 +17,14 @@ body {
 p {
   margin: 0;
   padding: 0;
+}
+
+#Jomb {
+  display: grid;
+  grid-gap: 20px;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-areas: "title nav nav nav" "header-divider header-divider header-divider header-divider" "sidebar detail detail detail" "footer-divider footer-divider footer-divider footer-divider";
+  grid-template-rows: auto;
 }
 
 #SiteTitle,
@@ -36,13 +42,35 @@ p {
   padding: 0;
 }
 
-header {
+.divider {
   align-items: center;
   border-bottom: 3px solid var(--hover-gray);
+}
+
+#HeaderDivider {
+  grid-area: header-divider;
+}
+
+#FooterDivider {
+  grid-area: footer-divider;
+}
+
+header {
   display: flex;
-  flex-wrap: wrap;
-  padding: 0 0 17px 0;
-  margin-bottom: 17px;
+  align-items: flex-end;
+}
+
+#SiteTitle {
+  grid-area: title;
+}
+
+#SiteNav {
+  grid-area: nav;
+  text-align: right;
+}
+
+#SiteNav div {
+  display: inline-block;
 }
 
 #SiteNav a {
@@ -80,27 +108,11 @@ a:focus {
   border-color: blue;
 }
 
-#SiteNav {
-  flex-grow: 5;
-}
-
-#HeaderRight {
-  text-align: right;
-  flex-grow: 1;
-}
-
-#Main {
-  align-items: flex-start;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-}
-
 #SideBar {
-  flex: 1;
+  grid-area: sidebar;
   min-width: 300px;
 }
 
 #BookDetail {
-  flex: 4;
+  grid-area: detail;
 }

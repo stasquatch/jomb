@@ -7,29 +7,27 @@ class App extends Component {
   render() {
     return (
       <div id="Jomb">
-        <header>
-          <div id="SiteTitle">
-            <h1>just organize my books</h1>
-          </div>
-          <div id="SiteNav">
-            <a href="/add" class="top-nav">
-              add
-            </a>
-          </div>
+        <header id="SiteTitle">
+          <h1>just organize my books</h1>
+        </header>
+        <div id="SiteNav">
+          <a href="/add" class="top-nav">
+            add
+          </a>
           <div id="HeaderRight">
             <a href="/login" id="LoginLink">
               login
             </a>
           </div>
-        </header>
-        <div id="Main">
-          <div id="SideBar">
-            <BookList />
-          </div>
-          <div id="BookDetail">
-            <p>placeholder</p>
-          </div>
         </div>
+        <div class="divider" id="HeaderDivider" />
+        <div id="SideBar">
+          <BookList />
+        </div>
+        <div id="BookDetail">
+          <p>placeholder</p>
+        </div>
+        <div class="divider" id="FooterDivider" />
       </div>
     );
   }
