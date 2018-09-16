@@ -45,10 +45,10 @@ exports.addBook = async (req, res, next) => {
     errorNumber: SUCCESS,
     message: "Book successfully added!",
     book
-  }
+  };
   req.changeHistoryData = {
-    action: ADD,
-    description: "Added book to library",
+    description: ADD,
+    detail: "Added book to library",
     bookId: book._id
   };
   next();

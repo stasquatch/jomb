@@ -101,24 +101,35 @@ exports.deleteBook = async (req, res) => {
 };
 
 exports.updateBook = async (req, res) => {
-  const currentBook = await Book.findOne({ _id: req.params.id });
-  const book = await Book.findOneAndUpdate(
+  await Book.findOneAndUpdate(
     { _id: req.params.id },
     req.body,
     { new: true },
     (err, book) => {
-      // REFACTOR THIS
-
       if (err) {
         return res.json({
           message:
             "Sorry, there was an error updating this book. Please try again."
         });
       }
-      changeHistoryController.addChangeHistoryToBook(req.params.id, UPDATE);
-      res.json({ message: "Book successfully updated!", book });
+
+      req.transportToUI = {
+        errorNumber: SUCCESS,
+        message: "Book successfully updated",
+        book
+      };
+
+      req.changeHistoryData = {
+        description: UPDATE,
+        detail: "Updated book",
+        bookId: book._id
+      };
+
+      next();
     }
-  ).catch(err => {});
+  ).catch(err => {
+    return err;
+  });
 };
 
 exports.addTagToBook = async (req, res) => {
