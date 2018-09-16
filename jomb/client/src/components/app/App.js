@@ -11,7 +11,7 @@ class App extends Component {
           <h1>just organize my books</h1>
         </header>
         <div id="SiteNav">
-          <a href="/add" class="top-nav">
+          <a href="/add" className="top-nav">
             add
           </a>
           <div id="HeaderRight">
@@ -20,14 +20,14 @@ class App extends Component {
             </a>
           </div>
         </div>
-        <div class="divider" id="HeaderDivider" />
+        <div className="divider" id="HeaderDivider" />
         <div id="SideBar">
           <BookList />
         </div>
         <div id="BookDetail">
           <p>placeholder</p>
         </div>
-        <div class="divider" id="FooterDivider" />
+        <div className="divider" id="FooterDivider" />
       </div>
     );
   }

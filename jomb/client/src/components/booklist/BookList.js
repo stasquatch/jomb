@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import axios from "axios";
 import Search from "../search/Search";
 import { SUCCESS } from "../../helpers/constants";
+import BookTile from "../bookTile/BookTile";
 
 class BookList extends Component {
   state = {
@@ -24,8 +25,13 @@ class BookList extends Component {
       });
   };
 
+  filterBooks = searchValue => {
+    // TODO: add endpoint to search by title or author
+    console.log(`Searching for ${searchValue}`);
+  };
+
   renderBookInfo(book) {
-    return <p key={book.isbn}>{book.title}</p>;
+    return <BookTile book={book} key={book._id} />;
   }
 
   componentDidMount() {
@@ -44,7 +50,7 @@ class BookList extends Component {
   render() {
     return (
       <div id="BookList">
-        <Search addBook={book => this.addBookToApp(book)} />
+        <Search filterBooks={searchValue => this.filterBooks(searchValue)} />
         {this.state.books.length > 0
           ? this.state.books.map(book => this.renderBookInfo(book))
           : "Pending"}

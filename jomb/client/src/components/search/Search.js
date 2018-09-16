@@ -8,8 +8,7 @@ class Search extends Component {
 
   handleClick(event) {
     event.preventDefault();
-    var searchValue = document.getElementById("SearchInput").value;
-    this.props.addBook(searchValue);
+    this.props.filterBooks(this.state.searchField);
     this.setState({ searchField: "" });
   }
 
@@ -22,7 +21,7 @@ class Search extends Component {
       <form className="search-bar" onSubmit={e => this.handleClick(e)}>
         <input
           type="text"
-          placeholder="Add Book by ISBN"
+          placeholder="Search through your books"
           id="SearchInput"
           value={this.state.searchField}
           onChange={this.handleChange}
