@@ -23,17 +23,19 @@ exports.getBooks = async (req, res) => {
 };
 
 exports.getBook = async (req, res) => {
-  let book = await Book.findOne({ _id: req.params.id }, (err, book) => {
+  await Book.findOne({ _id: req.params.id }, (err, book) => {
     if (err) {
       return res.json({
         message: "Sorry, we could not find that book. Please try again."
       });
     }
     return res.json(book);
+  }).catch(err => {
+    return err;
   });
 };
 
-exports.addBook = async (req, res) => {
+exports.addBook = async (req, res, next) => {
   let isbn = req.body.isbn;
   axios(`https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`)
     .then(data => {
@@ -64,16 +66,17 @@ exports.addBook = async (req, res) => {
             });
           }
         }
-        changeHistoryController.addChangeHistoryToBook(
-          book._id,
-          ADD,
-          "Added book to library"
-        );
-        res.json({
+        req.transportToUI = {
           errorNumber: SUCCESS,
           message: "Book successfully added!",
           book
-        });
+        };
+        req.changeHistoryData = {
+          description: ADD,
+          detail: "Added book to library",
+          bookId: book._id
+        };
+        next();
       });
     })
     .catch(err => {

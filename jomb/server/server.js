@@ -8,6 +8,7 @@ const bookController = require("./controllers/bookController");
 const tagController = require("./controllers/tagController");
 const changeHistoryController = require("./controllers/changeHistoryController");
 const config = require("config");
+const { addChangeHistoryEvent } = require("./handlers/changeHistory");
 
 mongoose.connect(config.DBHost);
 let db = mongoose.connection;
@@ -27,7 +28,7 @@ app.get("/api/healthcheck", (req, res) => res.json({ message: "Success!" }));
 app
   .route("/api/book")
   .get(bookController.getBooks)
-  .post(bookController.addBook);
+  .post(bookController.addBook, addChangeHistoryEvent);
 
 app
   .route("/api/book/:id")
