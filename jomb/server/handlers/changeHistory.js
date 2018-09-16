@@ -22,7 +22,7 @@ exports.addChangeHistoryEvent = async (req, res) => {
       console.error("Error saving history", err);
       return res.json({
         changeHistory: {
-          errorNumber: 3,
+          errorNumber: GENERAL_ERROR,
           message: `Error with change history [${description}] to book`
         },
         transportToUI: req.transportToUI

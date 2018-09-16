@@ -85,18 +85,27 @@ exports.addBook = async (req, res, next) => {
 };
 
 exports.deleteBook = async (req, res) => {
-  let book = await Book.deleteOne({ _id: req.params.id }, (err, book) => {
+  await Book.deleteOne({ _id: req.params.id }, (err, book) => {
     if (err) {
       return res.json({
+        errorNumber: GENERAL_ERROR,
         message: "There was an error deleting this book. Please try again."
       });
     }
-    changeHistoryController.addChangeHistoryToBook(
-      req.params.id,
-      DELETE,
-      "Deleted book from library"
-    );
-    res.json({ message: "Book successfully deleted!" });
+
+    req.transportToUI = {
+      errorNumber: SUCCESS,
+      message: "Book successfully deleted",
+      book
+    };
+
+    req.changeHistoryData = {
+      description: DELETE,
+      detail: "Deleted book from library",
+      bookId: book._id
+    };
+
+    next();
   });
 };
 

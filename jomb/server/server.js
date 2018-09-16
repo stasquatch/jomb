@@ -33,7 +33,7 @@ app
 app
   .route("/api/book/:id")
   .get(bookController.getBook)
-  .delete(bookController.deleteBook)
+  .delete(bookController.deleteBook, addChangeHistoryEvent)
   .post(bookController.updateBook, addChangeHistoryEvent);
 
 app.route("/api/book/:id/:rating").post(bookController.rateBook);
