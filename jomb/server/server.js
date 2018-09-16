@@ -36,7 +36,9 @@ app
   .delete(bookController.deleteBook, addChangeHistoryEvent)
   .post(bookController.updateBook, addChangeHistoryEvent);
 
-app.route("/api/book/:id/:rating").post(bookController.rateBook);
+app
+  .route("/api/book/:id/:rating")
+  .post(bookController.rateBook, addChangeHistoryEvent);
 
 app
   .route("/api/tag")
