@@ -24,4 +24,4 @@ const getChangesForBook = async (req, res) => {
   });
 };
 
-module.exports = { addChangeHistoryToBook, getAllChanges, getChangesForBook };
+module.exports = { getAllChanges, getChangesForBook };
