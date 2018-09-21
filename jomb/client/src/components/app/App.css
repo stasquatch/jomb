@@ -23,7 +23,12 @@ p {
   display: grid;
   grid-gap: 20px;
   grid-template-columns: repeat(4, 1fr);
-  grid-template-areas: "title nav nav nav" "header-divider header-divider header-divider header-divider" "sidebar detail detail detail" "footer-divider footer-divider footer-divider footer-divider";
+  grid-template-areas:
+    "title nav nav nav"
+    "header-divider header-divider header-divider header-divider"
+    "sidebar detail detail detail"
+    "footer-divider footer-divider footer-divider footer-divider"
+    "footer footer footer footer";
   grid-template-rows: auto;
 }
 
@@ -119,4 +124,45 @@ a:focus {
 
 #Footer p {
   font-size: 14px;
+}
+
+@media only screen and (max-width: 992px) {
+  #Jomb {
+    grid-template-areas:
+      "title title title title"
+      "nav nav nav nav"
+      "header-divider header-divider header-divider header-divider"
+      "sidebar sidebar sidebar sidebar"
+      "detail detail detail detail"
+      "footer-divider footer-divider footer-divider footer-divider"
+      "footer footer footer footer";
+  }
+
+  #SideBar {
+    max-height: 400px;
+    overflow: auto;
+    padding: 0 5px;
+  }
+
+  #BookList {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  #BookList .search-bar,
+  #BookList .book-tile-container {
+    padding: 0 10px;
+  }
+
+  .book-tile-container {
+    display: flex;
+    max-width: 450px;
+    min-width: 250px;
+    flex: 1;
+  }
+
+  .book-tile {
+    flex: 1;
+  }
 }

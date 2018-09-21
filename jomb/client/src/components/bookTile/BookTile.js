@@ -3,10 +3,12 @@ import React from "react";
 
 function BookTile({ book }) {
   return (
-    <a href={`/book/${book.isbn}`} className="book-tile">
-      <span className="book-title">{book.title}</span>
-      <span className="book-author">{book.authors.join(", ")}</span>
-    </a>
+    <div className="book-tile-container">
+      <a href={`/book/${book.isbn}`} className="book-tile">
+        <span className="book-title">{book.title}</span>
+        <span className="book-author">{book.authors.join(", ")}</span>
+      </a>
+    </div>
   );
 }
 
