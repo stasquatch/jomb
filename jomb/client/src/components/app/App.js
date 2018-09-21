@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { VERSION_NUMBER } from "../../helpers/constants";
 import BookList from "../booklist/BookList";
 import "normalize.css";
 // import "./App.css";
@@ -28,6 +29,9 @@ class App extends Component {
           <p>placeholder</p>
         </div>
         <div className="divider" id="FooterDivider" />
+        <div id="Footer">
+          <p>{VERSION_NUMBER} — (C) Stacy Harrison 2018</p>
+        </div>
       </div>
     );
   }

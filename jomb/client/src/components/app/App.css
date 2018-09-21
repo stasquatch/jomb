@@ -116,3 +116,7 @@ a:focus {
 #BookDetail {
   grid-area: detail;
 }
+
+#Footer p {
+  font-size: 14px;
+}
