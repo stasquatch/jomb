@@ -1,8 +1,14 @@
 .search-bar {
   width: 100%;
   display: flex;
+  padding: 0 0 20px 0;
 }
 
 .search-bar input {
   flex-grow: 1;
+  padding: 10px;
+}
+
+.search-bar button {
+  cursor: pointer;
 }
