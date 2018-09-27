@@ -1,15 +1,17 @@
 import React from "react";
-// import "./BookTile.css";
+import { Link } from "react-router-dom";
 
-function BookTile({ book }) {
+const BookTile = ({ book }) => {
   return (
     <div className="book-tile-container">
-      <a href={`/book/${book.isbn}`} className="book-tile">
-        <span className="book-title">{book.title}</span>
-        <span className="book-author">{book.authors.join(", ")}</span>
-      </a>
+      <Link to={`/book/${book._id}`} className="book-tile">
+        <div>
+          <span className="book-title">{book.title}</span>
+          <span className="book-author">{book.authors.join(", ")}</span>
+        </div>
+      </Link>
     </div>
   );
-}
+};
 
 export default BookTile;

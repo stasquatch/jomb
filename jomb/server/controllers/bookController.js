@@ -16,6 +16,7 @@ const {
 const axios = require("axios");
 
 exports.getBooks = async (req, res) => {
+  console.log("hitting getBooks");
   let books = await Book.find({}, (err, books) => {
     if (err) return res.json({ message: "Error retrieving all books." });
     res.json(books);
