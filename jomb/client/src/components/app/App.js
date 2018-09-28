@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route } from "react-router-dom";
 import { VERSION_NUMBER } from "../../helpers/constants";
 
 import BookList from "../booklist/BookList";
@@ -12,8 +12,7 @@ import "normalize.css";
 
 class App extends Component {
   state = {
-    books: [],
-    book: {}
+    books: []
   };
 
   componentDidMount() {
@@ -52,10 +51,7 @@ class App extends Component {
             <BookList books={this.state.books} />
           </div>
           <div id="BookDetail">
-            <Route
-              path="/book/:id"
-              render={props => <BookDetail {...props} book={this.state.book} />}
-            />
+            <Route path="/book/:id" component={BookDetail} />
           </div>
           <div className="divider" id="FooterDivider" />
           <div id="Footer">

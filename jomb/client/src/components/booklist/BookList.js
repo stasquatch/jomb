@@ -1,9 +1,6 @@
 import React, { Component } from "react";
-import axios from "axios";
 import Search from "../search/Search";
-import { SUCCESS } from "../../helpers/constants";
 import BookTile from "../bookTile/BookTile";
-import _ from "lodash";
 
 class BookList extends Component {
   addBookToApp = bookIsbn => {
@@ -38,7 +35,6 @@ class BookList extends Component {
         {this.props.books.length > 0
           ? this.props.books.map(book => this.renderBookInfo(book))
           : "Pending"}
-        {this.props.books.length}
       </div>
     );
   }
