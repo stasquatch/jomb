@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import axios from "axios";
+import TagList from "../tagList/TagList";
 
 class BookDetail extends Component {
   state = {
     book: {
       authors: [],
-      title: "",
-      location: []
+      title: ""
     }
   };
 
@@ -50,12 +50,13 @@ class BookDetail extends Component {
             ? this.state.book.location.join(", ")
             : "No location selected"}
         </p>
-        <p>
+        {/* <p>
           Tags:{" "}
           {this.state.book.tags && this.state.book.tags.length > 0
             ? this.state.book.tags.join(", ")
             : "No tags available"}
-        </p>
+        </p> */}
+        <TagList tags={["funny", "dark", "biography"]} />
       </div>
     );
   }
