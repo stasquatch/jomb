@@ -5,7 +5,7 @@ import registerServiceWorker from "./registerServiceWorker";
 
 // css in the order we want
 import "./components/app/App.css";
-import "./components/search/Search.css";
+import "./components/inlineInputGroup/InlineInputGroup.css";
 import "./components/booklist/BookList.css";
 import "./components/bookTile/BookTile.css";
 import "./components/tagList/TagList.css";

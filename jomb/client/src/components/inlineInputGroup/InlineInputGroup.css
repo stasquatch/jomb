@@ -1,14 +1,14 @@
-.search-bar {
+.input-group {
   width: 100%;
   display: flex;
   padding: 0 0 20px 0;
 }
 
-.search-bar input {
+.input-group input {
   flex-grow: 1;
   padding: 10px;
 }
 
-.search-bar button {
+.input-group button {
   cursor: pointer;
 }

@@ -37,11 +37,49 @@ class BookDetail extends Component {
       });
   };
 
+  updateBook = bookToUpdate => {
+    axios
+      .post(`/api/book/${bookToUpdate._id}`, {
+        bookToUpdate
+      })
+      .then(res => {
+        //handle change history addition
+        console.log(res.data.changeHistory.message);
+        //handle book updated
+        console.log(res.data.transportToUI.message);
+      });
+  };
+
+  deleteTag = tag => {
+    let bookToUpdate = this.state.book;
+    if (bookToUpdate.tags.includes(tag)) {
+      // do i need to update the state or does it detect change?
+      let updatedTagList = bookToUpdate.tags.filter(t => t !== tag);
+      console.log(updatedTagList);
+    } else {
+      // handle error
+      console.error("That tag doesn't exist on that book...");
+    }
+  };
+
+  addTags = tags => {
+    let bookToUpdate = this.state.book;
+
+    if (tags === undefined || tags === "") {
+      return;
+    }
+
+    let tagArr = tags.split(",").map(item => item.trim());
+    bookToUpdate.tags = tagArr;
+    this.updateBook(bookToUpdate);
+  };
+
   render() {
     return (
       <div id="BookDetailContainer">
         <h2>
-          {this.state.book.title} by {this.state.book.authors.join(", ")}
+          {this.state.book.title} by{" "}
+          {this.state.book.authors ? this.state.book.authors.join(", ") : ""}
         </h2>
         <p>Added On: {format(this.state.book.addedOn)}</p>
         <p>ISBN: {this.state.book.isbn}</p>
@@ -51,13 +89,11 @@ class BookDetail extends Component {
             ? this.state.book.location.join(", ")
             : "No location selected"}
         </p>
-        {/* <p>
-          Tags:{" "}
-          {this.state.book.tags && this.state.book.tags.length > 0
-            ? this.state.book.tags.join(", ")
-            : "No tags available"}
-        </p> */}
-        <TagList tags={["funny", "dark", "biography"]} />
+        <TagList
+          tags={this.state.book.tags}
+          deleteTag={this.deleteTag}
+          addTags={this.addTags}
+        />
       </div>
     );
   }

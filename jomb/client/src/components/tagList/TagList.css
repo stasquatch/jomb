@@ -23,3 +23,8 @@
 #AddTagsBtn {
   margin-top: 8px;
 }
+
+#TagInputGroup {
+  width: 35%;
+  margin-top: 10px;
+}

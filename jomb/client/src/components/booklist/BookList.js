@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import Search from "../search/Search";
 import BookTile from "../bookTile/BookTile";
+import InlineInputGroup from "../inlineInputGroup/InlineInputGroup";
 
 class BookList extends Component {
   addBookToApp = bookIsbn => {
@@ -31,7 +31,11 @@ class BookList extends Component {
   render() {
     return (
       <div id="BookList">
-        <Search filterBooks={searchValue => this.filterBooks(searchValue)} />
+        <InlineInputGroup
+          buttonEvent={searchValue => this.filterBooks(searchValue)}
+          buttonText="Search"
+          placeholderText="Search through your books.."
+        />
         {this.props.books.length > 0
           ? this.props.books.map(book => this.renderBookInfo(book))
           : "Pending"}

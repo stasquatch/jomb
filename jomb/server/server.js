@@ -41,6 +41,10 @@ app
   .post(bookController.rateBook, addChangeHistoryEvent);
 
 app
+  .route("/api/tags/book/:id")
+  .post(bookController.addTagToBook, addChangeHistoryEvent);
+
+app
   .route("/api/tag")
   .get(tagController.getTags)
   .post(tagController.addTag)

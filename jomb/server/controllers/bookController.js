@@ -16,7 +16,6 @@ const {
 const axios = require("axios");
 
 exports.getBooks = async (req, res) => {
-  console.log("hitting getBooks");
   let books = await Book.find({}, (err, books) => {
     if (err) return res.json({ message: "Error retrieving all books." });
     res.json(books);
@@ -24,16 +23,16 @@ exports.getBooks = async (req, res) => {
 };
 
 exports.getBook = async (req, res) => {
-  await Book.findOne({ _id: req.params.id }, (err, book) => {
-    if (err) {
-      return res.json({
-        message: "Sorry, we could not find that book. Please try again."
-      });
-    }
-    return res.json(book);
-  }).catch(err => {
-    return err;
-  });
+  await Book.findOne({ _id: req.params.id })
+    .populate("tags")
+    .exec((err, book) => {
+      if (err) {
+        return res.json({
+          message: "Sorry, we could not find that book. Please try again."
+        });
+      }
+      return res.json(book);
+    });
 };
 
 exports.addBook = async (req, res, next) => {
@@ -110,7 +109,7 @@ exports.deleteBook = async (req, res) => {
   });
 };
 
-exports.updateBook = async (req, res) => {
+exports.updateBook = async (req, res, next) => {
   await Book.findOneAndUpdate(
     { _id: req.params.id },
     req.body,
@@ -142,13 +141,44 @@ exports.updateBook = async (req, res) => {
   });
 };
 
-exports.addTagToBook = async (req, res) => {
-  // check if tag already exists
-  // create tag if it doesn't exist
-  // add tag to book
-  if (req.body.tag && req.body.tag.name) {
-    const tag = await tagController.findOrCreateTag(req.body.tag.name);
+exports.addTagToBook = async (req, res, next) => {
+  if (!req.body.tag || req.body.tag === "") {
+    return res.json({
+      message: `Sorry, there was an error adding a tag [${
+        req.body.tag
+      }] to this book. Please try again.`
+    });
   }
+
+  let tag = await tagController.findOrCreateTag(req.body.tag);
+
+  await Book.findOneAndUpdate(
+    { _id: req.params.id },
+    { $addToSet: { tags: tag._id } },
+    { new: true },
+    (err, book) => {
+      if (err) {
+        return res.json({
+          message:
+            "Sorry, there was an error updating this book. Please try again."
+        });
+      }
+
+      req.transportToUI = {
+        errorNumber: SUCCESS,
+        message: "Book successfully updated",
+        book
+      };
+
+      req.changeHistoryData = {
+        description: UPDATE,
+        detail: `Added the ${tag.name} tag`,
+        bookId: book._id
+      };
+
+      next();
+    }
+  );
 };
 
 exports.rateBook = async (req, res) => {
