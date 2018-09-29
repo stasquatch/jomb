@@ -52,14 +52,16 @@ class BookDetail extends Component {
 
   deleteTag = tag => {
     let bookToUpdate = this.state.book;
-    if (bookToUpdate.tags.includes(tag)) {
-      // do i need to update the state or does it detect change?
-      let updatedTagList = bookToUpdate.tags.filter(t => t !== tag);
-      console.log(updatedTagList);
-    } else {
-      // handle error
-      console.error("That tag doesn't exist on that book...");
+
+    if (tag === undefined || tag === "") {
+      return;
     }
+
+    axios.post(`/api/removeTag/book/${bookToUpdate._id}`, { tag }).then(res => {
+      if (res.data.transportToUI.errorNumber === 0) {
+        this.setState({ book: res.data.transportToUI.book });
+      }
+    });
   };
 
   addTag = tag => {
@@ -69,7 +71,7 @@ class BookDetail extends Component {
       return;
     }
 
-    axios.post(`/api/tags/book/${bookToUpdate._id}`, { tag }).then(res => {
+    axios.post(`/api/addTag/book/${bookToUpdate._id}`, { tag }).then(res => {
       if (res.data.transportToUI.errorNumber === 0) {
         this.setState({ book: res.data.transportToUI.book });
       }

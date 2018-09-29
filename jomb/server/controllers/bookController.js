@@ -184,6 +184,45 @@ exports.addTagToBook = async (req, res, next) => {
     });
 };
 
+exports.removeTagFromBook = async (req, res, next) => {
+  if (!req.body.tag || req.body.tag === "") {
+    return res.json({
+      message: `Sorry, there was an error removing a tag [${
+        req.body.tag
+      }] to this book. Please try again.`
+    });
+  }
+
+  await Book.findOneAndUpdate(
+    { _id: req.params.id },
+    { $pullAll: { tags: [req.body.tag._id] } },
+    { new: true }
+  )
+    .populate("tags")
+    .exec((err, book) => {
+      if (err) {
+        return res.json({
+          message:
+            "Sorry, there was an error removing that tag. Please try again."
+        });
+      }
+
+      req.transportToUI = {
+        errorNumber: SUCCESS,
+        message: "Book successfully updated",
+        book
+      };
+
+      req.changeHistoryData = {
+        description: UPDATE,
+        detail: `Removed the ${rqe.body.tag.name} tag`,
+        bookId: req.params.id
+      };
+
+      next();
+    });
+};
+
 exports.rateBook = async (req, res) => {
   const bookId = req.params.id;
   const rating = req.params.rating;
