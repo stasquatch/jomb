@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import axios from "axios";
 import TagList from "../tagList/TagList";
+import { format } from "../../helpers/dateFormatter";
 
 class BookDetail extends Component {
   state = {
@@ -42,7 +43,7 @@ class BookDetail extends Component {
         <h2>
           {this.state.book.title} by {this.state.book.authors.join(", ")}
         </h2>
-        <p>Added On: {this.state.book.addedOn}</p>
+        <p>Added On: {format(this.state.book.addedOn)}</p>
         <p>ISBN: {this.state.book.isbn}</p>
         <p>
           Location:{" "}
