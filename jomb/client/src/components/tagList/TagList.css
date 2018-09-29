@@ -20,11 +20,12 @@
   cursor: pointer;
 }
 
-#AddTagsBtn {
-  margin-top: 8px;
-}
-
 #TagInputGroup {
   width: 35%;
   margin-top: 10px;
+}
+
+.tag-list p {
+  display: inline-block;
+  font-style: italic;
 }

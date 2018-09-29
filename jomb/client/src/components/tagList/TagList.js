@@ -2,17 +2,12 @@ import React from "react";
 import InlineInputGroup from "../inlineInputGroup/InlineInputGroup";
 
 function TagList(props) {
-  function handleClick(event) {
-    event.preventDefault();
-    console.log(event.target);
-  }
-
   function deleteTag(tag) {
     props.deleteTag(tag); // BookDetail takes care of this
   }
 
-  function addTags(tags) {
-    props.addTags(tags);
+  function addTag(tag) {
+    props.addTag(tag);
   }
 
   function renderTagSpans() {
@@ -42,9 +37,9 @@ function TagList(props) {
       </div>
       <div id="TagInputGroup">
         <InlineInputGroup
-          buttonEvent={inputValue => addTags(inputValue)}
+          buttonEvent={inputValue => addTag(inputValue)}
           buttonText="Add"
-          placeholderText="Add tags separated by commas"
+          placeholderText="Add one tag at a time..."
         />
       </div>
     </div>

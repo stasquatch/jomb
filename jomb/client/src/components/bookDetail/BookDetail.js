@@ -62,16 +62,18 @@ class BookDetail extends Component {
     }
   };
 
-  addTags = tags => {
+  addTag = tag => {
     let bookToUpdate = this.state.book;
 
-    if (tags === undefined || tags === "") {
+    if (tag === undefined || tag === "") {
       return;
     }
 
-    let tagArr = tags.split(",").map(item => item.trim());
-    bookToUpdate.tags = tagArr;
-    this.updateBook(bookToUpdate);
+    axios.post(`/api/tags/book/${bookToUpdate._id}`, { tag }).then(res => {
+      if (res.data.transportToUI.errorNumber === 0) {
+        this.setState({ book: res.data.transportToUI.book });
+      }
+    });
   };
 
   render() {
@@ -92,7 +94,7 @@ class BookDetail extends Component {
         <TagList
           tags={this.state.book.tags}
           deleteTag={this.deleteTag}
-          addTags={this.addTags}
+          addTag={this.addTag}
         />
       </div>
     );

@@ -157,8 +157,10 @@ exports.addTagToBook = async (req, res, next) => {
   await Book.findOneAndUpdate(
     { _id: req.params.id },
     { $addToSet: { tags: tag._id } },
-    { new: true },
-    (err, book) => {
+    { new: true }
+  )
+    .populate("tags")
+    .exec((err, book) => {
       if (err) {
         return res.json({
           message:
@@ -179,8 +181,7 @@ exports.addTagToBook = async (req, res, next) => {
       };
 
       next();
-    }
-  );
+    });
 };
 
 exports.rateBook = async (req, res) => {
