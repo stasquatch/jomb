@@ -1,0 +1,11 @@
+#BookDetailContainer {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+#BasicDetails,
+#ChangeHistory {
+  flex: 1;
+  min-width: 300px;
+}

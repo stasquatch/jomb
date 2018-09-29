@@ -54,10 +54,10 @@ app
   .post(tagController.addTag)
   .delete(tagController.deleteTag);
 
-app.route("/api/changeHistories").get(changeHistoryController.getAllChanges);
+app.route("/api/changeHistory").get(changeHistoryController.getAllChanges);
 
 app
-  .route("/api/changeHistories/:bookId")
+  .route("/api/changeHistory/:bookId")
   .get(changeHistoryController.getChangesForBook);
 
 app.listen(port, () => console.log(`Listening on port ${port}`));

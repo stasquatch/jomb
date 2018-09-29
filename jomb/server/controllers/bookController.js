@@ -215,7 +215,7 @@ exports.removeTagFromBook = async (req, res, next) => {
 
       req.changeHistoryData = {
         description: UPDATE,
-        detail: `Removed the ${rqe.body.tag.name} tag`,
+        detail: `Removed the ${req.body.tag.name} tag`,
         bookId: req.params.id
       };
 
