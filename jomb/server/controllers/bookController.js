@@ -16,10 +16,12 @@ const {
 const axios = require("axios");
 
 exports.getBooks = async (req, res) => {
-  let books = await Book.find({}, (err, books) => {
-    if (err) return res.json({ message: "Error retrieving all books." });
-    res.json(books);
-  });
+  await Book.find({})
+    .sort({ title: "asc" })
+    .exec((err, books) => {
+      if (err) return res.json({ message: "Error retrieving all books." });
+      res.json(books);
+    });
 };
 
 exports.getBook = async (req, res) => {
