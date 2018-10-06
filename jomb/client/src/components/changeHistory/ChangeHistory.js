@@ -16,7 +16,7 @@ function ChangeHistory(props) {
       {props.changeHistory.map(ch => {
         return (
           <p key={ch._id}>
-            {ch.description} on {format(ch.updatedDate)}
+            {ch.detail} on {format(ch.updatedDate)}
           </p>
         );
       })}

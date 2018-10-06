@@ -97,12 +97,6 @@ class BookDetail extends Component {
           </h2>
           <p>Added On: {format(this.state.book.addedOn)}</p>
           <p>ISBN: {this.state.book.isbn}</p>
-          <p>
-            Location:{" "}
-            {this.state.book.location && this.state.book.location.length > 0
-              ? this.state.book.location.join(", ")
-              : "No location selected"}
-          </p>
           <TagList
             tags={this.state.book.tags}
             deleteTag={this.deleteTag}
