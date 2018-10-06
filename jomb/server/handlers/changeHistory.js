@@ -34,7 +34,8 @@ exports.addChangeHistoryEvent = async (req, res) => {
       transportToUI: req.transportToUI,
       changeHistory: {
         errorNumber: SUCCESS,
-        message: "Successfully added change history event to book"
+        message: "Successfully added change history event to book",
+        changeHistoryItem
       }
     });
   });

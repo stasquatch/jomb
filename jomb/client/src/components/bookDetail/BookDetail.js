@@ -16,6 +16,7 @@ class BookDetail extends Component {
   componentDidUpdate(prevProps) {
     if (this.props.match.params.id !== prevProps.match.params.id) {
       this.getBookDetail();
+      this.getChangeHistory();
     }
   }
 
@@ -57,6 +58,7 @@ class BookDetail extends Component {
         //handle book updated
         console.log(res.data.transportToUI.message);
       });
+    this.getChangeHistory();
   };
 
   deleteTag = tag => {
@@ -69,6 +71,12 @@ class BookDetail extends Component {
     axios.post(`/api/removeTag/book/${bookToUpdate._id}`, { tag }).then(res => {
       if (res.data.transportToUI.errorNumber === 0) {
         this.setState({ book: res.data.transportToUI.book });
+      }
+
+      if (res.data.changeHistory.errorNumber === 0) {
+        let changeHistory = this.state.changeHistory;
+        changeHistory.unshift(res.data.changeHistory.changeHistoryItem);
+        this.setState({ changeHistory });
       }
     });
   };
@@ -83,6 +91,12 @@ class BookDetail extends Component {
     axios.post(`/api/addTag/book/${bookToUpdate._id}`, { tag }).then(res => {
       if (res.data.transportToUI.errorNumber === 0) {
         this.setState({ book: res.data.transportToUI.book });
+      }
+
+      if (res.data.changeHistory.errorNumber === 0) {
+        let changeHistory = this.state.changeHistory;
+        changeHistory.unshift(res.data.changeHistory.changeHistoryItem);
+        this.setState({ changeHistory });
       }
     });
   };

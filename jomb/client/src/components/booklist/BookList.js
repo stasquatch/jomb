@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import BookTile from "../bookTile/BookTile";
 import InlineInputGroup from "../inlineInputGroup/InlineInputGroup";
+import { NavLink } from "react-router-dom";
 
 class BookList extends Component {
   addBookToApp = bookIsbn => {
@@ -25,7 +25,22 @@ class BookList extends Component {
   };
 
   renderBookInfo(book) {
-    return <BookTile book={book} key={book._id} />;
+    return (
+      <div className="book-tile-container" key={book._id}>
+        <NavLink
+          to={`/book/${book._id}`}
+          activeClassName="selected"
+          className="book-tile"
+        >
+          <div>
+            <span className="book-title">{book.title}</span>
+            <span className="book-author">
+              {book.authors ? book.authors.join(", ") : ""}
+            </span>
+          </div>
+        </NavLink>
+      </div>
+    );
   }
 
   render() {

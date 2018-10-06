@@ -12,16 +12,19 @@ const getAllChanges = async (req, res) => {
 };
 
 const getChangesForBook = async (req, res, next) => {
-  await ChangeHistory.find({ bookId: req.params.bookId }, (err, changes) => {
-    if (err) {
-      return res.json({
-        message: `Error retrieving all change histories for ${
-          req.params.bookId
-        }`
-      });
-    }
-    res.json(changes);
-  }).catch(err => console.error(err));
+  await ChangeHistory.find({ bookId: req.params.bookId })
+    .sort({ updatedDate: "desc" })
+    .exec((err, changes) => {
+      if (err) {
+        return res.json({
+          message: `Error retrieving all change histories for ${
+            req.params.bookId
+          }`
+        });
+      }
+      res.json(changes);
+    })
+    .catch(err => console.error(err));
 };
 
 module.exports = { getAllChanges, getChangesForBook };

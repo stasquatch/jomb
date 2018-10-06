@@ -256,3 +256,8 @@ exports.rateBook = async (req, res, next) => {
     return err;
   });
 };
+
+exports.addLocationToBook = async (req, res, next) => {
+  const bookId = req.params.id;
+  const location = req.params.location;
+};

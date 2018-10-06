@@ -1,0 +1,31 @@
+a.book-tile {
+  display: block;
+  margin: 8px 0;
+  padding: 12px;
+  text-transform: none;
+  transition: all 0.1s ease-in-out;
+}
+
+.book-tile .book-author,
+.book-tile .book-title {
+  display: block;
+  line-height: 130%;
+}
+
+.book-tile .book-title {
+  font-style: italic;
+}
+
+.book-tile .book-author {
+  text-transform: uppercase;
+  font-size: 15px;
+}
+
+.book-tile:hover {
+  transform: scale(1.05);
+}
+
+.book-tile.selected {
+  transform: scale(1.05);
+  background-color: var(--hover-gray);
+}

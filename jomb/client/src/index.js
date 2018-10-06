@@ -7,7 +7,6 @@ import registerServiceWorker from "./registerServiceWorker";
 import "./components/app/App.css";
 import "./components/inlineInputGroup/InlineInputGroup.css";
 import "./components/booklist/BookList.css";
-import "./components/bookTile/BookTile.css";
 import "./components/bookDetail/BookDetail.css";
 import "./components/changeHistory/ChangeHistory.css";
 import "./components/tagList/TagList.css";
