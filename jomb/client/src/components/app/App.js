@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import { VERSION_NUMBER } from "../../helpers/constants";
 
 import BookList from "../booklist/BookList";
@@ -34,7 +34,9 @@ class App extends Component {
       <Router>
         <div id="Jomb">
           <header id="SiteTitle">
-            <h1>just organize my books</h1>
+            <h1>
+              <Link to="/">just organize my books</Link>
+            </h1>
           </header>
           <div id="SiteNav">
             <a href="/add" className="top-nav">
