@@ -86,7 +86,7 @@ exports.addBook = async (req, res, next) => {
     });
 };
 
-exports.deleteBook = async (req, res) => {
+exports.deleteBook = async (req, res, next) => {
   await Book.deleteOne({ _id: req.params.id }, (err, book) => {
     if (err) {
       return res.json({
@@ -98,13 +98,15 @@ exports.deleteBook = async (req, res) => {
     req.transportToUI = {
       errorNumber: SUCCESS,
       message: "Book successfully deleted",
-      book
+      book: {
+        _id: req.params.id
+      }
     };
 
     req.changeHistoryData = {
       description: DELETE,
       detail: "Deleted book from library",
-      bookId: book._id
+      bookId: req.params.id
     };
 
     next();
@@ -223,7 +225,7 @@ exports.removeTagFromBook = async (req, res, next) => {
     });
 };
 
-exports.rateBook = async (req, res) => {
+exports.rateBook = async (req, res, next) => {
   const bookId = req.params.id;
   const rating = req.params.rating;
 

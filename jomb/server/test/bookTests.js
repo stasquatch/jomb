@@ -66,12 +66,15 @@ describe("Books", () => {
         .post("/api/book")
         .send({ isbn: "9781986431484" })
         .end((err, res) => {
-          res.body.should.have
+          res.body.transportToUI.should.have
             .property("message")
             .eql("Book successfully added!");
-          res.body.should.have.property("book").property("title");
-          res.body.should.have.property("book").property("authors");
-          res.body.should.have.property("book").property("isbn");
+          res.body.changeHistory.should.have.property("message");
+          res.body.transportToUI.should.have.property("book").property("title");
+          res.body.transportToUI.should.have
+            .property("book")
+            .property("authors");
+          res.body.transportToUI.should.have.property("book").property("isbn");
           done(err);
         });
     });
@@ -90,45 +93,21 @@ describe("Books", () => {
     });
 
     it("should add a tag to a new book", done => {
-      let tag = new Tag({
-        name: "tag"
-      });
-
-      tag.save((err, tag) => {
-        let bookInfo = {
-          isbn: "9781986431484",
-          tags: [tag._id]
-        };
-        chai
-          .request(server)
-          .post("/api/book")
-          .send(bookInfo)
-          .end((err, res) => {
-            res.body.book.should.have
-              .property("tags")
-              .contains(tag._id.toString());
-            done(err);
-          });
-      });
-    });
-
-    it("should persist change history item after its book is deleted", done => {
       chai
         .request(server)
         .post("/api/book")
         .send({ isbn: "9781986431484" })
         .end((err, res) => {
-          Book.deleteOne({ _id: res.body.book._id }, err => {
-            chai
-              .request(server)
-              .get("/api/changeHistories")
-              .end((err, res) => {
-                res.body.should.not.have.property("errors");
-                res.body.should.have.lengthOf(1);
-                res.body[0].should.have.property("description").eql(ADD);
-                done(err);
-              });
-          });
+          chai
+            .request(server)
+            .post(`/api/addTag/book/${res.body.transportToUI.book._id}`)
+            .send({ tag: "tag" })
+            .end((err2, res2) => {
+              res2.body.transportToUI.book.should.have
+                .property("tags")
+                .length(1);
+              done(err2);
+            });
         });
     });
 
@@ -150,7 +129,7 @@ describe("Books", () => {
           .send(book)
           .end((err, res) => {
             res.body.should.not.have.property("errors");
-            res.body.book.should.have
+            res.body.transportToUI.book.should.have
               .property("location")
               .contains(location._id.toString());
             done(err);
@@ -168,12 +147,35 @@ describe("Books", () => {
         .end((err, res) => {
           chai
             .request(server)
-            .delete("/api/book/" + res.body.book._id)
+            .delete("/api/book/" + res.body.transportToUI.book._id)
             .end((err, res) => {
-              res.body.should.have
+              res.body.transportToUI.should.have
                 .property("message")
-                .eql("Book successfully deleted!");
+                .eql("Book successfully deleted");
               done(err);
+            });
+        });
+    });
+
+    it("should persist change history item after its book is deleted", done => {
+      chai
+        .request(server)
+        .post("/api/book")
+        .send({ isbn: "9781986431484" })
+        .end((err, res) => {
+          chai
+            .request(server)
+            .delete(`/api/book/${res.body.transportToUI.book._id}`)
+            .end((err, res) => {
+              chai
+                .request(server)
+                .get("/api/changeHistory")
+                .end((err, res) => {
+                  res.body.should.not.have.property("errors");
+                  res.body.should.have.lengthOf(2);
+                  res.body[0].should.have.property("description").eql(ADD);
+                  done(err);
+                });
             });
         });
     });
@@ -186,20 +188,18 @@ describe("Books", () => {
         .post("/api/book")
         .send({ isbn: "9781986431484" })
         .end((err, res) => {
-          let book = res.body.book;
+          let book = res.body.transportToUI.book;
           book.title = "Changed title";
 
           chai
             .request(server)
-            .post(`/api/book/${res.body.book._id}`)
+            .post(`/api/book/${book._id}`)
             .send(book)
             .end((err, res) => {
-              res.body.should.have.property("book");
-              res.body.book.should.have.property("title").eql(book.title);
-              // currently the change history is happening asynchronously to the update,
-              // so the book object returned on the update call is not in sync with the
-              // most up to date version of change history. let's work on this later.
-              // res.body.book.changeHistory.should.have.lengthOf(2);
+              res.body.transportToUI.should.have.property("book");
+              res.body.transportToUI.book.should.have
+                .property("title")
+                .eql(book.title);
               done(err);
             });
         });
@@ -211,15 +211,17 @@ describe("Books", () => {
         .post("/api/book")
         .send({ isbn: "9781986431484" })
         .end((err, res) => {
-          let book = res.body.book;
+          let book = res.body.transportToUI.book;
           book.rating = 5;
 
           chai
             .request(server)
-            .post(`/api/book/${res.body.book._id}/${book.rating}`)
+            .post(`/api/book/${res.body.transportToUI.book._id}/${book.rating}`)
             .end((err, res) => {
-              res.body.should.have.property("book");
-              res.body.book.should.have.property("rating").eql(book.rating);
+              res.body.transportToUI.should.have.property("book");
+              res.body.transportToUI.book.should.have
+                .property("rating")
+                .eql(book.rating);
               done(err);
             });
         });
@@ -231,12 +233,12 @@ describe("Books", () => {
         .post("/api/book")
         .send({ isbn: "9781986431484" })
         .end((err, res) => {
-          let book = res.body.book;
+          let book = res.body.transportToUI.book;
           book.rating = 15;
 
           chai
             .request(server)
-            .post(`/api/book/${res.body.book._id}/${book.rating}`)
+            .post(`/api/book/${res.body.transportToUI.book._id}/${book.rating}`)
             .end((err, res) => {
               res.body.should.have
                 .property("message")
