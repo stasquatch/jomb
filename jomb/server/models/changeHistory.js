@@ -13,7 +13,8 @@ const ChangeHistorySchema = new Schema({
   detail: String,
   bookId: {
     type: Schema.Types.ObjectId,
-    ref: "Book"
+    ref: "Book",
+    required: true
   }
 });
 

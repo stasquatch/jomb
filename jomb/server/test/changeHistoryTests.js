@@ -27,7 +27,7 @@ describe("Change History", () => {
       .end((err, res) => {
         chai
           .request(server)
-          .get(`/api/changeHistories/${res.body.book._id}`)
+          .get(`/api/changeHistory/${res.body.transportToUI.book._id}`)
           .end((err, res) => {
             res.body.should.have.lengthOf(1);
             res.body[0].should.have.property("description").eql("Add");
@@ -43,17 +43,17 @@ describe("Change History", () => {
       .send({ isbn: "9781986431484" })
       .end((err, res) => {
         // update book
-        let book = res.body.book;
+        let book = res.body.transportToUI.book;
         book.title = "Changed title";
         chai
           .request(server)
-          .post(`/api/book/${res.body.book._id}`)
+          .post(`/api/book/${book._id}`)
           .send(book)
           .end((err, res) => {
             // get change histories
             chai
               .request(server)
-              .get(`/api/changeHistories/${res.body.book._id}`)
+              .get(`/api/changeHistory/${res.body.transportToUI.book._id}`)
               .end((err, res) => {
                 res.body.should.have.lengthOf(2);
                 res.body[0].should.have.property("description").eql("Add");
@@ -70,14 +70,14 @@ describe("Change History", () => {
       .post("/api/book")
       .send({ isbn: "9781986431484" })
       .end((err, res) => {
-        let bookId = res.body.book._id;
+        let bookId = res.body.transportToUI.book._id;
         chai
           .request(server)
           .delete(`/api/book/${bookId}`)
           .end((err, res) => {
             chai
               .request(server)
-              .get(`/api/changeHistories/${bookId}`)
+              .get(`/api/changeHistory/${bookId}`)
               .end((err, res) => {
                 res.body.should.have.lengthOf(2);
                 res.body[0].should.have.property("description").eql("Add");

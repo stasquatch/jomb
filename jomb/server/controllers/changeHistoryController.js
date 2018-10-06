@@ -8,10 +8,10 @@ const getAllChanges = async (req, res) => {
       return res.json({ message: "Error retrieving all change histories" });
     }
     res.json(changes);
-  });
+  }).catch(err => console.error(err));
 };
 
-const getChangesForBook = async (req, res) => {
+const getChangesForBook = async (req, res, next) => {
   await ChangeHistory.find({ bookId: req.params.bookId }, (err, changes) => {
     if (err) {
       return res.json({
@@ -21,7 +21,7 @@ const getChangesForBook = async (req, res) => {
       });
     }
     res.json(changes);
-  });
+  }).catch(err => console.error(err));
 };
 
 module.exports = { getAllChanges, getChangesForBook };
