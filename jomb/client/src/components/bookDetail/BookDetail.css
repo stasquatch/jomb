@@ -4,8 +4,30 @@
   flex-wrap: wrap;
 }
 
+#BookTitleAuthor {
+  width: 100%;
+}
+
 #BasicDetails,
 #ChangeHistory {
   flex: 1;
   min-width: 300px;
+  line-height: 170%;
+}
+
+#BookDetailContainer h2,
+#BookDetailContainer h3 {
+  margin-top: 0;
+}
+
+#BookDetailContainer h3 {
+  margin-bottom: 10px;
+}
+
+.detail-label {
+  font-weight: bold;
+}
+
+#BookDetailContainer button {
+  line-height: 150%;
 }

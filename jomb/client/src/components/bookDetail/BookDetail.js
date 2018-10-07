@@ -28,38 +28,30 @@ class BookDetail extends Component {
     }
   }
 
-  getChangeHistory = () => {
-    axios.get(`/api/changeHistory/${this.props.match.params.id}`).then(res => {
-      this.setState({ changeHistory: res.data });
+  addTag = tag => {
+    let bookToUpdate = this.state.book;
+
+    if (tag === undefined || tag === "") {
+      return;
+    }
+
+    axios.post(`/api/addTag/book/${bookToUpdate._id}`, { tag }).then(res => {
+      if (res.data.transportToUI.errorNumber === 0) {
+        this.setState({ book: res.data.transportToUI.book });
+      }
+
+      this.updateChangeHistory(res.data.changeHistory);
     });
   };
 
-  getBookDetail = () => {
-    axios
-      .get(`/api/book/${this.props.match.params.id}`)
-      .then(res => {
-        if (res.data) {
-          const book = res.data;
-          this.setState({ book });
-        }
-      })
-      .catch(err => {
-        console.log("catching an error: ", err);
-      });
-  };
-
-  updateBook = bookToUpdate => {
-    axios
-      .post(`/api/book/${bookToUpdate._id}`, {
-        bookToUpdate
-      })
-      .then(res => {
-        //handle change history addition
-        console.log(res.data.changeHistory.message);
-        //handle book updated
-        console.log(res.data.transportToUI.message);
-      });
-    this.getChangeHistory();
+  deleteBook = e => {
+    let bookId = this.state.book._id;
+    axios.delete(`/api/book/${bookId}`).then(res => {
+      if (res.data.transportToUI.errorNumber === 0) {
+        this.props.history.push("/");
+      }
+    });
+    this.props.removeBookFromState(bookId);
   };
 
   deleteTag = tag => {
@@ -82,24 +74,38 @@ class BookDetail extends Component {
     });
   };
 
-  addTag = tag => {
-    let bookToUpdate = this.state.book;
+  getBookDetail = () => {
+    axios
+      .get(`/api/book/${this.props.match.params.id}`)
+      .then(res => {
+        if (res.data) {
+          const book = res.data;
+          this.setState({ book });
+        }
+      })
+      .catch(err => {
+        console.log("catching an error: ", err);
+      });
+  };
 
-    if (tag === undefined || tag === "") {
-      return;
-    }
-
-    axios.post(`/api/addTag/book/${bookToUpdate._id}`, { tag }).then(res => {
-      if (res.data.transportToUI.errorNumber === 0) {
-        this.setState({ book: res.data.transportToUI.book });
-      }
-
-      this.updateChangeHistory(res.data.changeHistory);
+  getChangeHistory = () => {
+    axios.get(`/api/changeHistory/${this.props.match.params.id}`).then(res => {
+      this.setState({ changeHistory: res.data });
     });
   };
 
-  deleteBook = e => {
-    console.log("delete book");
+  updateBook = bookToUpdate => {
+    axios
+      .post(`/api/book/${bookToUpdate._id}`, {
+        bookToUpdate
+      })
+      .then(res => {
+        //handle change history addition
+        console.log(res.data.changeHistory.message);
+        //handle book updated
+        console.log(res.data.transportToUI.message);
+      });
+    this.getChangeHistory();
   };
 
   updateChangeHistory = resChangeHistoryObj => {
@@ -130,15 +136,23 @@ class BookDetail extends Component {
   render() {
     return (
       <div id="BookDetailContainer">
-        <div id="BasicDetails">
+        <div id="BookTitleAuthor">
           <h2>
             {this.state.book.title} by{" "}
             {this.state.book.authors ? this.state.book.authors.join(", ") : ""}
           </h2>
-          <p>Added On: {format(this.state.book.addedOn)}</p>
-          <p>ISBN: {this.state.book.isbn}</p>
+        </div>
+        <div id="BasicDetails">
+          <h3>Book Details</h3>
           <p>
-            Status:
+            <span class="detail-label">Added On:</span>{" "}
+            {format(this.state.book.addedOn)}
+          </p>
+          <p>
+            <span class="detail-label">ISBN:</span> {this.state.book.isbn}
+          </p>
+          <p>
+            <span class="detail-label">Status:</span>{" "}
             <select
               value={this.state.book.status}
               onChange={e => this.updateStatus(e)}

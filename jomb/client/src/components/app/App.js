@@ -16,6 +16,10 @@ class App extends Component {
   };
 
   componentDidMount() {
+    this.refreshBooklist();
+  }
+
+  refreshBooklist = () => {
     axios
       .get("/api/book")
       .then(res => {
@@ -27,7 +31,13 @@ class App extends Component {
       .catch(err => {
         console.log("catching an error : ", err);
       });
-  }
+  };
+
+  removeBookFromState = bookId => {
+    let books = this.state.books;
+    books = books.filter(book => book._id !== bookId);
+    this.setState({ books });
+  };
 
   render() {
     return (
@@ -53,7 +63,15 @@ class App extends Component {
             <BookList books={this.state.books} />
           </div>
           <div id="BookDetail">
-            <Route path="/book/:id" component={BookDetail} />
+            <Route
+              path="/book/:id"
+              render={props => (
+                <BookDetail
+                  {...props}
+                  removeBookFromState={this.removeBookFromState}
+                />
+              )}
+            />
           </div>
           <div className="divider" id="FooterDivider" />
           <div id="Footer">

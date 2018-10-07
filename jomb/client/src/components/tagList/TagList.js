@@ -32,7 +32,9 @@ function TagList(props) {
   return (
     <div id="TagContainer">
       <div className="tag-list">
-        <label htmlFor="add-tags">Tags: </label>
+        <label htmlFor="add-tags" className="detail-label">
+          Tags:{" "}
+        </label>
         {hasTags ? renderTagSpans() : <p>No tags to display</p>}
       </div>
       <div id="TagInputGroup">
