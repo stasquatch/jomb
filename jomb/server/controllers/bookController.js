@@ -11,7 +11,8 @@ const {
   DUPLICATE_KEY_ERROR,
   NO_DATA,
   GENERAL_ERROR,
-  SUCCESS
+  SUCCESS,
+  BOOK_STATUS_OPTIONS
 } = require("../models/constants");
 const axios = require("axios");
 
@@ -260,4 +261,45 @@ exports.rateBook = async (req, res, next) => {
 exports.addLocationToBook = async (req, res, next) => {
   const bookId = req.params.id;
   const location = req.params.location;
+};
+
+exports.updateStatus = async (req, res, next) => {
+  if (
+    req.body.status &&
+    req.body.status !== "" &&
+    BOOK_STATUS_OPTIONS.includes(req.body.status)
+  ) {
+    await Book.findOneAndUpdate(
+      { _id: req.params.id },
+      { status: req.body.status },
+      { new: true }
+    )
+      .populate("tags")
+      .exec((err, book) => {
+        if (err) {
+          return res.json({
+            message:
+              "Sorry, there was an error updating the status of this book. Please try again."
+          });
+        }
+
+        req.transportToUI = {
+          errorNumber: SUCCESS,
+          message: "Book successfully updated",
+          book
+        };
+
+        req.changeHistoryData = {
+          description: UPDATE,
+          detail: `Updated the status to ${book.status}`,
+          bookId: req.params.id
+        };
+
+        next();
+      });
+  } else {
+    return res.json({
+      message: `Sorry, there was an error updating this book. Please try again.`
+    });
+  }
 };

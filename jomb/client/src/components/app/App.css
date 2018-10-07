@@ -11,7 +11,7 @@ body {
   justify-content: space-around;
   line-height: 150%;
   margin: 0;
-  padding: 4%;
+  padding: 1% 4%;
 }
 
 p {
@@ -126,7 +126,7 @@ a:focus {
 #SideBar {
   grid-area: sidebar;
   min-width: 300px;
-  max-height: 65vh;
+  max-height: 78vh;
   overflow: auto;
   padding: 0 15px;
 }

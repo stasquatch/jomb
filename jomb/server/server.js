@@ -49,6 +49,10 @@ app
   .post(bookController.removeTagFromBook, addChangeHistoryEvent);
 
 app
+  .route("/api/updateStatus/book/:id")
+  .post(bookController.updateStatus, addChangeHistoryEvent);
+
+app
   .route("/api/tag")
   .get(tagController.getTags)
   .post(tagController.addTag)

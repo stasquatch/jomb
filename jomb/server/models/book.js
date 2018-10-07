@@ -38,7 +38,8 @@ const BookSchema = new Schema({
   },
   format: String,
   timesRead: Number,
-  currentlyReading: Boolean
+  currentlyReading: Boolean,
+  status: String
 });
 
 module.exports = mongoose.model("Book", BookSchema);

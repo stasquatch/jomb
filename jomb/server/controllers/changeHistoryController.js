@@ -23,8 +23,7 @@ const getChangesForBook = async (req, res, next) => {
         });
       }
       res.json(changes);
-    })
-    .catch(err => console.error(err));
+    });
 };
 
 module.exports = { getAllChanges, getChangesForBook };
