@@ -4,6 +4,7 @@ import { VERSION_NUMBER } from "../../helpers/constants";
 
 import BookList from "../booklist/BookList";
 import BookDetail from "../bookDetail/BookDetail";
+import AddBook from "../addBook/AddBook";
 
 import axios from "axios";
 import _ from "lodash";
@@ -18,6 +19,25 @@ class App extends Component {
   componentDidMount() {
     this.refreshBooklist();
   }
+
+  addBook = book => {
+    axios.post(`/api/book`, { isbn: book }).then(res => {
+      if (res.data.message) {
+        console.error(res.data.message);
+        return;
+      }
+
+      if (res.data.transportToUI.errorNumber === 0) {
+        console.log("added book");
+        let books = this.state.books;
+        // TODO: figure out how to add this alphabetically
+        // TODO: navigate to new book
+        // TODO: type ahead book by name or author
+        books.push(res.data.transportToUI.book);
+        this.setState({ books });
+      }
+    });
+  };
 
   refreshBooklist = () => {
     axios
@@ -49,9 +69,9 @@ class App extends Component {
             </h1>
           </header>
           <div id="SiteNav">
-            <a href="/add" className="top-nav">
+            <Link to="/add/book" className="top-nav">
               add
-            </a>
+            </Link>
             <div id="HeaderRight">
               <a href="/login" id="LoginLink">
                 login
@@ -71,6 +91,10 @@ class App extends Component {
                   removeBookFromState={this.removeBookFromState}
                 />
               )}
+            />
+            <Route
+              path="/add/book"
+              render={props => <AddBook {...props} addBook={this.addBook} />}
             />
           </div>
           <div className="divider" id="FooterDivider" />
