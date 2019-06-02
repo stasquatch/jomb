@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { Route, Link } from "react-router-dom";
 import { VERSION_NUMBER } from "../../helpers/constants";
 import { ToastContainer, toast } from "react-toastify";
 
@@ -42,6 +42,8 @@ class App extends Component {
         toast(res.data.transportToUI.message || "success!", {
           type: toast.TYPE.SUCCESS
         });
+        console.log(this.props);
+        // this.props.history.push(`/books/${res.data.transportToUI.book.id}`);
       }
     });
   };
@@ -68,49 +70,47 @@ class App extends Component {
 
   render() {
     return (
-      <Router>
-        <div id="Jomb">
-          <header id="SiteTitle">
-            <h1>
-              <Link to="/">just organize my books</Link>
-            </h1>
-          </header>
-          <div id="SiteNav">
-            <Link to="/add/book" className="top-nav">
-              add
-            </Link>
-            <div id="HeaderRight">
-              <a href="/login" id="LoginLink">
-                login
-              </a>
-            </div>
+      <div id="Jomb">
+        <header id="SiteTitle">
+          <h1>
+            <Link to="/">just organize my books</Link>
+          </h1>
+        </header>
+        <div id="SiteNav">
+          <Link to="/add/book" className="top-nav">
+            add
+          </Link>
+          <div id="HeaderRight">
+            <a href="/login" id="LoginLink">
+              login
+            </a>
           </div>
-          <div className="divider" id="HeaderDivider" />
-          <div id="SideBar">
-            <BookList books={this.state.books} />
-          </div>
-          <div id="BookDetail">
-            <Route
-              path="/book/:id"
-              render={props => (
-                <BookDetail
-                  {...props}
-                  removeBookFromState={this.removeBookFromState}
-                />
-              )}
-            />
-            <Route
-              path="/add/book"
-              render={props => <AddBook {...props} addBook={this.addBook} />}
-            />
-          </div>
-          <div className="divider" id="FooterDivider" />
-          <div id="Footer">
-            <p>{VERSION_NUMBER} — (C) Stacy Harrison 2018</p>
-          </div>
-          <ToastContainer />
         </div>
-      </Router>
+        <div className="divider" id="HeaderDivider" />
+        <div id="SideBar">
+          <BookList books={this.state.books} />
+        </div>
+        <div id="BookDetail">
+          <Route
+            path="/book/:id"
+            render={props => (
+              <BookDetail
+                {...props}
+                removeBookFromState={this.removeBookFromState}
+              />
+            )}
+          />
+          <Route
+            path="/add/book"
+            render={props => <AddBook {...props} addBook={this.addBook} />}
+          />
+        </div>
+        <div className="divider" id="FooterDivider" />
+        <div id="Footer">
+          <p>{VERSION_NUMBER} — (C) Stacy Harrison 2018</p>
+        </div>
+        <ToastContainer />
+      </div>
     );
   }
 }

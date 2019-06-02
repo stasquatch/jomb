@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import App from "./components/app/App";
+import Container from "./components/container/Container";
 import registerServiceWorker from "./registerServiceWorker";
 
 // css in the order we want
@@ -11,5 +11,5 @@ import "./components/bookDetail/BookDetail.css";
 import "./components/changeHistory/ChangeHistory.css";
 import "./components/tagList/TagList.css";
 
-ReactDOM.render(<App />, document.getElementById("root"));
+ReactDOM.render(<Container />, document.getElementById("root"));
 registerServiceWorker();
