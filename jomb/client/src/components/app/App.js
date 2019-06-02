@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import { VERSION_NUMBER } from "../../helpers/constants";
+import { ToastContainer, toast } from "react-toastify";
 
 import BookList from "../booklist/BookList";
 import BookDetail from "../bookDetail/BookDetail";
@@ -10,6 +11,7 @@ import axios from "axios";
 import _ from "lodash";
 
 import "normalize.css";
+import "react-toastify/dist/ReactToastify.css";
 
 class App extends Component {
   state = {
@@ -23,7 +25,9 @@ class App extends Component {
   addBook = book => {
     axios.post(`/api/book`, { isbn: book }).then(res => {
       if (res.data.message) {
-        console.error(res.data.message);
+        toast(res.data.message, {
+          type: toast.TYPE.ERROR
+        });
         return;
       }
 
@@ -35,6 +39,9 @@ class App extends Component {
         // TODO: type ahead book by name or author
         books.push(res.data.transportToUI.book);
         this.setState({ books });
+        toast(res.data.transportToUI.message || "success!", {
+          type: toast.TYPE.SUCCESS
+        });
       }
     });
   };
@@ -101,6 +108,7 @@ class App extends Component {
           <div id="Footer">
             <p>{VERSION_NUMBER} — (C) Stacy Harrison 2018</p>
           </div>
+          <ToastContainer />
         </div>
       </Router>
     );

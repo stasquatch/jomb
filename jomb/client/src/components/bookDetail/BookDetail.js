@@ -145,14 +145,14 @@ class BookDetail extends Component {
         <div id="BasicDetails">
           <h3>Book Details</h3>
           <p>
-            <span class="detail-label">Added On:</span>{" "}
+            <span className="detail-label">Added On:</span>{" "}
             {format(this.state.book.addedOn)}
           </p>
           <p>
-            <span class="detail-label">ISBN:</span> {this.state.book.isbn}
+            <span className="detail-label">ISBN:</span> {this.state.book.isbn}
           </p>
           <p>
-            <span class="detail-label">Status:</span>{" "}
+            <span className="detail-label">Status:</span>{" "}
             <select
               value={this.state.book.status}
               onChange={e => this.updateStatus(e)}

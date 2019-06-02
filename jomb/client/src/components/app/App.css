@@ -161,6 +161,7 @@ a:focus {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+    padding-bottom: 10px;
   }
 
   #BookList .search-bar,
