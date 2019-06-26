@@ -58,7 +58,7 @@ class App extends Component {
         }
       })
       .catch(err => {
-        console.log("catching an error : ", err);
+        // console.log("catching an error : ", err);
       });
   };
 

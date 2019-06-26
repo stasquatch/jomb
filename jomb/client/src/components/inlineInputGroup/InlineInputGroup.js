@@ -6,7 +6,9 @@ class InlineInputGroup extends Component {
   };
 
   handleClick(event) {
-    event.preventDefault();
+    if (event) {
+      event.preventDefault();
+    }
     this.props.buttonEvent(this.state.inputField);
     this.setState({ inputField: "" });
   }
