@@ -11,7 +11,8 @@ function TagList(props) {
   }
 
   function renderTagSpans() {
-    return props.tags.map((tag, index) => {
+    const uniqueTags = [...new Set(props.tags)];
+    return uniqueTags.map((tag, index) => {
       return (
         <span className="existing-tag" key={index}>
           {tag.name}

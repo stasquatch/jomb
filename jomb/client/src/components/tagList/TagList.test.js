@@ -32,3 +32,9 @@ it("triggers deleteTag function", () => {
   tagList.find(".delete-tag").simulate("click");
   expect(mockDeleteTagFn).toHaveBeenCalled();
 });
+
+it("renders only unique tags", () => {
+  const tags = ["tagOne", "tagOne", "tagTwo"];
+  const tagList = shallow(<TagList tags={tags} />);
+  expect(tagList.find(".existing-tag")).toHaveLength(2);
+});
