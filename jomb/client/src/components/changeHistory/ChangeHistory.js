@@ -10,10 +10,15 @@ function ChangeHistory(props) {
       </div>
     );
   }
+
+  let orderedHistories = props.changeHistory.sort((a, b) => {
+    return new Date(b.updatedDate) - new Date(a.updatedDate);
+  });
+
   return (
     <div>
       <h3>Change History</h3>
-      {props.changeHistory.map(ch => {
+      {orderedHistories.map(ch => {
         return (
           <p key={ch._id}>
             {ch.detail} on {format(ch.updatedDate)}

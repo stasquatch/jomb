@@ -44,3 +44,27 @@ it("renders multiple change histories", () => {
   );
   expect(changeHistory.find("p")).toHaveLength(2);
 });
+
+it("renders change histories in descending order of updated date", () => {
+  const changeHistories = [
+    {
+      _id: 1,
+      detail: "second change history",
+      updatedDate: new Date(Date.now() - 100)
+    },
+    {
+      _id: 2,
+      detail: "first change history",
+      updatedDate: Date.now()
+    }
+  ];
+  const changeHistory = shallow(
+    <ChangeHistory changeHistory={changeHistories} />
+  );
+  expect(
+    changeHistory
+      .find("p")
+      .first()
+      .text()
+  ).toMatch("first change history");
+});
