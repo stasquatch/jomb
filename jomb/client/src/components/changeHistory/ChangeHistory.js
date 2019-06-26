@@ -2,7 +2,7 @@ import React from "react";
 import { format } from "../../helpers/dateFormatter";
 
 function ChangeHistory(props) {
-  if (!props.changeHistory) {
+  if (!props.changeHistory || props.changeHistory.length === 0) {
     return (
       <div>
         <h3>Change History</h3>
