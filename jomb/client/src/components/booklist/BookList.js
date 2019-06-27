@@ -52,7 +52,9 @@ class BookList extends Component {
           placeholderText="Search through your books.."
         />
         {this.props.books.length > 0
-          ? this.props.books.map(book => this.renderBookInfo(book))
+          ? this.props.books
+              .sort((a, b) => a.title.toLowerCase() > b.title.toLowerCase())
+              .map(book => this.renderBookInfo(book))
           : "Pending"}
       </div>
     );
