@@ -24,6 +24,16 @@ class BookList extends Component {
     console.log(`Searching for ${searchValue}`);
   };
 
+  renderBookList(books) {
+    return books
+      .sort((a, b) => a.title.toLowerCase() > b.title.toLowerCase())
+      .map(book => {
+        if (book._id) {
+          return this.renderBookInfo(book);
+        }
+      });
+  }
+
   renderBookInfo(book) {
     return (
       <div className="book-tile-container" key={book._id}>
@@ -52,9 +62,7 @@ class BookList extends Component {
           placeholderText="Search through your books.."
         />
         {this.props.books.length > 0
-          ? this.props.books
-              .sort((a, b) => a.title.toLowerCase() > b.title.toLowerCase())
-              .map(book => this.renderBookInfo(book))
+          ? this.renderBookList(this.props.books)
           : "Pending"}
       </div>
     );
