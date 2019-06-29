@@ -27,11 +27,7 @@ class BookList extends Component {
   renderBookList(books) {
     return books
       .sort((a, b) => a.title.toLowerCase() > b.title.toLowerCase())
-      .map(book => {
-        if (book._id) {
-          return this.renderBookInfo(book);
-        }
-      });
+      .map(book => (book._id ? this.renderBookInfo(book) : ""));
   }
 
   renderBookInfo(book) {
