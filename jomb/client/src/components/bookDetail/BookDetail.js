@@ -81,6 +81,7 @@ class BookDetail extends Component {
         if (res.data) {
           const book = res.data;
           this.setState({ book });
+          console.log("NEW", this.state.book);
         }
       })
       .catch(err => {
