@@ -4,7 +4,7 @@ import TagList from "../tagList/TagList";
 import { format } from "../../helpers/dateFormatter";
 import ChangeHistory from "../changeHistory/ChangeHistory";
 import { BOOK_STATUS_OPTIONS } from "../../helpers/constants";
-import { BookTitleAuthor } from "../bookTitleAuthor/BookTitleAuthor";
+import BookTitleAuthor from "../bookTitleAuthor/BookTitleAuthor";
 
 class BookDetail extends Component {
   state = {
@@ -82,7 +82,6 @@ class BookDetail extends Component {
         if (res.data) {
           const book = res.data;
           this.setState({ book });
-          console.log("NEW", this.state.book);
         }
       })
       .catch(err => {
