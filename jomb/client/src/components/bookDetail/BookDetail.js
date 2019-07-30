@@ -4,6 +4,7 @@ import TagList from "../tagList/TagList";
 import { format } from "../../helpers/dateFormatter";
 import ChangeHistory from "../changeHistory/ChangeHistory";
 import { BOOK_STATUS_OPTIONS } from "../../helpers/constants";
+import { BookTitleAuthor } from "../bookTitleAuthor/BookTitleAuthor";
 
 class BookDetail extends Component {
   state = {
@@ -138,10 +139,10 @@ class BookDetail extends Component {
     return (
       <div id="BookDetailContainer">
         <div id="BookTitleAuthor">
-          <h2>
-            {this.state.book.title} by{" "}
-            {this.state.book.authors ? this.state.book.authors.join(", ") : ""}
-          </h2>
+          <BookTitleAuthor
+            title={this.state.book.title}
+            authors={this.state.book.authors}
+          />
         </div>
         <div id="BasicDetails">
           <h3>Book Details</h3>
